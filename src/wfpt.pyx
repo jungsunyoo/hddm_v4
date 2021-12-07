@@ -281,10 +281,10 @@ def wiener_like_rlddm_2step(np.ndarray[double, ndim=1] x1, # 1st-stage RT
             # get learning rate for current trial. if pos_alpha is not in
             # include it will be same as alpha so can still use this
             # calculation:
-            if feedbacks[i] > qs[responses[i]]:
-                alfa = (2.718281828459**pos_alfa) / (1 + 2.718281828459**pos_alfa)
-            else:
-                alfa = (2.718281828459**alpha) / (1 + 2.718281828459**alpha)
+            # if feedbacks[i] > qs[responses[i]]:
+            #     alfa = (2.718281828459**pos_alfa) / (1 + 2.718281828459**pos_alfa)
+            # else:
+            alfa = (2.718281828459**alpha) / (1 + 2.718281828459**alpha)
 
             # qs[1] is upper bound, qs[0] is lower bound. feedbacks is reward
             # received on current trial.
