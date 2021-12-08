@@ -228,8 +228,8 @@ def wienerRL_like_2step(x, v, alpha, pos_alpha, w, gamma, lambda_, sv, a, z, sz,
     wp = wiener_params
     response1 = x["response1"].values.astype(int)
     response2 = x["response2"].values.astype(int)
-    state1 = x["state1"].values.astype(float)
-    state2 = x["state2"].values.astype(float)
+    state1 = x["state1"].values.astype(int)
+    state2 = x["state2"].values.astype(int)
 
 
     q = x["q_init"].iloc[0]
