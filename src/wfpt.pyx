@@ -190,8 +190,8 @@ def wiener_like_rlddm_2step(np.ndarray[double, ndim=1] x1, # 1st-stage RT
     cdef np.ndarray[double, ndim=2] qs_mb = np.ones((nstates, 2))*q # second-stage Q-values
 
 
-    cdef np.ndarray[double, ndim=2] dtQ1
-    cdef np.ndarray[double, ndim=2] dtQ2
+    cdef double dtQ1
+    cdef double dtQ2
 
     cdef long s_
     cdef long a_ 
