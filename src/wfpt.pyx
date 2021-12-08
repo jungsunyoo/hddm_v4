@@ -18,7 +18,8 @@ import hddm
 import scipy.integrate as integrate
 from copy import copy
 import numpy as np
-import math
+from math import comb
+# cimport math
 import itertools
 
 cimport numpy as np
