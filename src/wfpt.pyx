@@ -181,7 +181,7 @@ def wiener_like_rlddm_2step(np.ndarray[double, ndim=1] x1, # 1st-stage RT
     cdef double pos_alfa
     # cdef np.ndarray[double, ndim=1] qs = np.array([q, q])
     # cdef np.ndarray[double, ndim=1] qs1 = np.array([q, q]) # initial value for 1st stage choice
-    cdef np.ndarray[int, ndim=1] planets
+    # cdef np.ndarray[int, ndim=1] planets
     cdef np.ndarray[double, ndim=1] xs
     cdef np.ndarray[double, ndim=1] feedbacks
     cdef np.ndarray[long, ndim=1] responses
@@ -250,7 +250,7 @@ def wiener_like_rlddm_2step(np.ndarray[double, ndim=1] x1, # 1st-stage RT
 
                 # 1st stage
                 planets = state_combinations[s1s[i]]
-                Qmb = np.dot(Tm, [np.max(qs_mb[planets[0],:]), max(qs_mb[planets[1],:])])
+                Qmb = np.dot(Tm, [np.max(qs_mb[planets[0],:]), np.max(qs_mb[planets[1],:])])
                 qs = w * Qmb + (1-w) * qs_mf[s1s[i],:] # Update for 1st trial 
 
                 dtq = qs[1] - qs[0]
