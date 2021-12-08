@@ -1186,7 +1186,9 @@ class HDDMBase(AccumulatorModel):
         self.p_outlier = p_outlier
 
         # set cdf_range
-        cdf_bound = max(np.abs(data["rt"])) + 1
+        # cdf_bound = max(np.abs(data["rt"])) + 1
+        # JY modified for two RTs (1st stage, 2nd stage)
+        cdf_bound = max(max(np.abs(data["rt1"])), max(np.abs(data["rt2"]))) + 1
         self.cdf_range = (-cdf_bound, cdf_bound)
 
         # set wfpt class

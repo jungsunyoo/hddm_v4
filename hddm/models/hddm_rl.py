@@ -159,6 +159,15 @@ class HDDMrl(HDDM):
         wfpt_parents = super(HDDMrl, self)._create_wfpt_parents_dict(knodes)
         wfpt_parents["alpha"] = knodes["alpha_bottom"]
         wfpt_parents["pos_alpha"] = knodes["pos_alpha_bottom"] if self.dual else 100.00
+
+
+        wfpt_parents["w"] = knodes["w_bottom"]
+        wfpt_parents["gamma"] = knodes["gamma_bottom"]
+        wfpt_parents["lambda_"] = knodes["lambda__bottom"]
+
+
+
+
         return wfpt_parents
 
     def _create_wfpt_knode(self, knodes):
@@ -167,7 +176,7 @@ class HDDMrl(HDDM):
             self.wfpt_rl_class,
             "wfpt",
             observed=True,
-            col_name=["split_by", "feedback", "response", "rt", "q_init"],
+            col_name=["split_by", "feedback", "response1", "response2", "rt1", "rt2",  "q_init", "state1", "state2", ],
             **wfpt_parents
         )
 
@@ -229,7 +238,8 @@ def wienerRL_like_2step(x, v, alpha, pos_alpha, w, gamma, lambda_, sv, a, z, sz,
 
 
     # YJS added for two-step tasks on 2021-12-05
-    nstates = x["nstates"].values.astype(int)
+    # nstates = x["nstates"].values.astype(int)
+    nstates = max(x["state2"].values.astype(int)) + 1
 
 
     return wiener_like_rlddm_2step(
