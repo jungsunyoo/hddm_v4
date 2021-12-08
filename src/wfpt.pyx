@@ -155,7 +155,7 @@ def wiener_like_rlddm(np.ndarray[double, ndim=1] x,
     return sum_logp
 
 
-# YJS added on 2021-12-05 for two-step tasks
+# JY added on 2021-12-05 for two-step tasks
 def wiener_like_rlddm_2step(np.ndarray[double, ndim=1] x1, # 1st-stage RT
                       np.ndarray[double, ndim=1] x2, # 2nd-stage RT
                       np.ndarray[double,ndim=1] s1, # 1st-stage state
@@ -164,7 +164,12 @@ def wiener_like_rlddm_2step(np.ndarray[double, ndim=1] x1, # 1st-stage RT
                       np.ndarray[long, ndim=1] response2,
                       np.ndarray[double, ndim=1] feedback,
                       np.ndarray[long, ndim=1] split_by,
-                      double q, double alpha, double pos_alpha, double v, 
+                      double q, double alpha, double pos_alpha, 
+
+                      double w, double gamma, double lambda_, 
+
+
+                      double v, 
                       double sv, double a, double z, double sz, double t,
                       double nstates,
                       double st, double err, int n_st=10, int n_sz=10, bint use_adaptive=1, double simps_err=1e-8,
@@ -179,6 +184,11 @@ def wiener_like_rlddm_2step(np.ndarray[double, ndim=1] x1, # 1st-stage RT
     cdef double wp_outlier = w_outlier * p_outlier
     cdef double alfa
     cdef double pos_alfa
+    # parameters added for two-step 
+    cdef double w
+    cdef double gamma
+    cdef double lambda_
+
     # cdef np.ndarray[double, ndim=1] qs = np.array([q, q])
     # cdef np.ndarray[double, ndim=1] qs1 = np.array([q, q]) # initial value for 1st stage choice
     # cdef np.ndarray[int, ndim=1] planets
@@ -195,9 +205,7 @@ def wiener_like_rlddm_2step(np.ndarray[double, ndim=1] x1, # 1st-stage RT
     cdef np.ndarray[int, ndim=1] counter = np.zeros(comb(nstates,2))
 
     cdef np.ndarray[double, ndim=1] Qmb
-    cdef double w
-    cdef double gamma
-    cdef double lambda_
+
     cdef double dtq
     cdef double dtQ1
     cdef double dtQ2

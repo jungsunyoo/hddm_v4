@@ -19,6 +19,9 @@ class HDDMrl(HDDM):
         self.non_centered = kwargs.pop("non_centered", False)
         self.dual = kwargs.pop("dual", False)
         self.alpha = kwargs.pop("alpha", True)
+        self.w = kwargs.pop("w", True) # added for two-step task
+        self.gamma = kwargs.pop("gamma", True) # added for two-step task
+        self.lambda_ = kwargs.pop("lambda_", True) # added for two-step task
         self.wfpt_rl_class = WienerRL
 
         super(HDDMrl, self).__init__(*args, **kwargs)
@@ -51,6 +54,42 @@ class HDDMrl(HDDM):
                         std_value=0.1,
                     )
                 )
+            if self.w:
+                knodes.update(
+                    self._create_family_normal_non_centered(
+                        "w",
+                        value=0,
+                        g_mu=0.2,
+                        g_tau=3 ** -2,
+                        std_lower=1e-10,
+                        std_upper=10,
+                        std_value=0.1,
+                    )
+                ) 
+            if self.gamma:
+                knodes.update(
+                    self._create_family_normal_non_centered(
+                        "gamma",
+                        value=0,
+                        g_mu=0.2,
+                        g_tau=3 ** -2,
+                        std_lower=1e-10,
+                        std_upper=10,
+                        std_value=0.1,
+                    )
+                ) 
+            if self.lambda_:
+                knodes.update(
+                    self._create_family_normal_non_centered(
+                        "lambda_",
+                        value=0,
+                        g_mu=0.2,
+                        g_tau=3 ** -2,
+                        std_lower=1e-10,
+                        std_upper=10,
+                        std_value=0.1,
+                    )
+                )                                        
         else:
             if self.alpha:
                 knodes.update(
@@ -76,6 +115,43 @@ class HDDMrl(HDDM):
                         std_value=0.1,
                     )
                 )
+            if self.w:
+                knodes.update(
+                    self._create_family_normal(
+                        "w",
+                        value=0,
+                        g_mu=0.2,
+                        g_tau=3 ** -2,
+                        std_lower=1e-10,
+                        std_upper=10,
+                        std_value=0.1,
+                    )
+                )   
+            if self.gamma:
+                knodes.update(
+                    self._create_family_normal(
+                        "gamma",
+                        value=0,
+                        g_mu=0.2,
+                        g_tau=3 ** -2,
+                        std_lower=1e-10,
+                        std_upper=10,
+                        std_value=0.1,
+                    )
+                )
+            if self.lambda_:
+                knodes.update(
+                    self._create_family_normal(
+                        "lambda_",
+                        value=0,
+                        g_mu=0.2,
+                        g_tau=3 ** -2,
+                        std_lower=1e-10,
+                        std_upper=10,
+                        std_value=0.1,
+                    )
+                )
+
 
         return knodes
 
@@ -130,7 +206,7 @@ def wienerRL_like(x, v, alpha, pos_alpha, sv, a, z, sz, t, st, p_outlier=0):
         **wp
     )
 
-def wienerRL_like_2step(x, v, alpha, pos_alpha, sv, a, z, sz, t, st, p_outlier=0):
+def wienerRL_like_2step(x, v, alpha, pos_alpha, w, gamma, lambda_, sv, a, z, sz, t, st, p_outlier=0):
 
     wiener_params = {
         "err": 1e-4,
@@ -167,7 +243,10 @@ def wienerRL_like_2step(x, v, alpha, pos_alpha, sv, a, z, sz, t, st, p_outlier=0
         split_by,
         q,
         alpha,
-        pos_alpha,
+        pos_alpha, 
+        w, # added for two-step task
+        gamma, # added for two-step task 
+        lambda_, # added for two-step task 
         v,
         sv,
         a,
