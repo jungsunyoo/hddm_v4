@@ -223,7 +223,7 @@ def wiener_like_rlddm_2step(np.ndarray[double, ndim=1] x1, # 1st-stage RT
         pos_alfa = pos_alpha
 
     # unique represent # of conditions
-    for j in range(int(unique.shape[0])):
+    for j in range(unique.shape[0]):
         s = unique[j]
         # select trials for current condition, identified by the split_by-array
         feedbacks = feedback[split_by == s]
@@ -233,7 +233,7 @@ def wiener_like_rlddm_2step(np.ndarray[double, ndim=1] x1, # 1st-stage RT
         x2s = x2[split_by == s]
         s1s = s1[split_by == s]
         s2s = s2[split_by == s]
-        s_size = int(x1s.shape[0])
+        s_size = x1s.shape[0]
         qs_mf[:,0] = q
         qs_mf[:,1] = q
 
@@ -321,7 +321,7 @@ def wiener_like_rlddm_2step(np.ndarray[double, ndim=1] x1, # 1st-stage RT
                         # qs_mb[s_, a_] = qs_mb[s_, a_] * (1-gamma)
                         qs_mb[s_,a_] *= (1-gamma)
 
-            for s_ in range(comb(nstates,2)):
+            for s_ in range(comb(nstates,2,exact=True)):
                 for a_ in range(2):
                     if (s_ is not s1s[i]) or (a_ is not responses1[i]):
                         qs_mf[s_,a_] *= (1-gamma)
