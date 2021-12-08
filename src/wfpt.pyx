@@ -196,16 +196,15 @@ def wiener_like_rlddm_2step(np.ndarray[double, ndim=1] x1, # 1st-stage RT
     cdef np.ndarray[long, ndim=1] responses2
     cdef np.ndarray[long, ndim=1] unique = np.unique(split_by)    
 
-    # cdef np.ndarray[double, ndim=1] s1s
-    # cdef np.ndarray[double, ndim=1] s2s    
+    cdef np.ndarray[long, ndim=1] s1s
+    cdef np.ndarray[long, ndim=1] s2s    
 
     # Added by Jungsun Yoo on 2021-11-27 for two-step tasks
     # parameters added for two-step
 
 
-    # cdef np.ndarray[int, ndim=1] planets
-    #cdef np.ndarray[double, ndim=1] 
-    counter = np.zeros(comb(nstates,2,exact=True))
+    cdef np.ndarray[long, ndim=1] planets
+    cdef np.ndarray[long, ndim=1] counter = np.zeros(comb(nstates,2,exact=True))
     # cdef np.ndarray[double, ndim=1] Qmb
     # cdef double dtq
     # cdef double rt
