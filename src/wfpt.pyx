@@ -172,7 +172,7 @@ def wiener_like_rlddm_2step(np.ndarray[double, ndim=1] x1, # 1st-stage RT
 
                       double v, 
                       double sv, double a, double z, double sz, double t,
-                      double nstates,
+                      int nstates,
                       double st, double err, int n_st=10, int n_sz=10, bint use_adaptive=1, double simps_err=1e-8,
                       double p_outlier=0, double w_outlier=0,
                       ):
