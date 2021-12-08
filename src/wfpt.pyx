@@ -185,9 +185,9 @@ def wiener_like_rlddm_2step(np.ndarray[double, ndim=1] x1, # 1st-stage RT
     cdef double alfa
     cdef double pos_alfa
     # parameters added for two-step 
-    cdef double w
-    cdef double gamma
-    cdef double lambda_
+    # cdef double w
+    # cdef double gamma
+    # cdef double lambda_
 
     # cdef np.ndarray[double, ndim=1] qs = np.array([q, q])
     # cdef np.ndarray[double, ndim=1] qs1 = np.array([q, q]) # initial value for 1st stage choice
