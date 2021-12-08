@@ -271,8 +271,7 @@ def wiener_like_rlddm_2step(np.ndarray[double, ndim=1] x1, # 1st-stage RT
                 dtq = qs[1] - qs[0]
                 if qs[0] > qs[1]:
                     dtq = -dtq               
-                p = full_pdf(x2s[i], ((dtq * v), sv, a, z,
-                             sz, t, st, err, n_st, n_sz, use_adaptive, simps_err))
+                p = full_pdf(x2s[i], (dtq * v), sv, a, z, sz, t, st, err, n_st, n_sz, use_adaptive, simps_err)
 
 
 
