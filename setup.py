@@ -17,12 +17,12 @@ except ImportError:
 import numpy as np
 
 setup(
-    name='HDDM-twostep',
+    name='HDDM_twostep',
     version='0.9.0',
     author='Thomas V. Wiecki, Imri Sofer, Michael J. Frank, Mads Lund Pedersen, Alexander Fengler, Lakshmi Govindarajan',
     author_email='thomas.wiecki@gmail.com',
     # url='http://github.com/hddm-devs/hddm',
-    url = 'http://github.com/jungsunyoo/hddm-twostep',
+    url = 'http://github.com/jungsunyoo/hddm_twostep',
     packages=['hddm', 'hddm.tests', 'hddm.models', 'hddm.examples', 'hddm.torch', 'hddm.torch_models', 'hddm.simulators'], # 'hddm.cnn', 'hddm.cnn_models', 'hddm.keras_models',
     package_data={'hddm':['examples/*.csv', 'examples/*.conf', 'torch_models/*', 'simulators/*']}, # 'cnn_models/*/*'  'keras_models/*.h5',
     scripts=['scripts/hddm_demo.py'],
