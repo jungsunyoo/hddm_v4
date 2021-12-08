@@ -17,7 +17,7 @@ except ImportError:
 import numpy as np
 
 setup(
-    name='HDDM_twostep',
+    name='HDDM2',
     version='0.9.0',
     author='Thomas V. Wiecki, Imri Sofer, Michael J. Frank, Mads Lund Pedersen, Alexander Fengler, Lakshmi Govindarajan',
     author_email='thomas.wiecki@gmail.com',
