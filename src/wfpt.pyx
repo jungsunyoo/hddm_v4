@@ -180,58 +180,41 @@ def wiener_like_rlddm_2step(np.ndarray[double, ndim=1] x1, # 1st-stage RT
     cdef Py_ssize_t i, j
     cdef Py_ssize_t s_size
     cdef int s
-
-
-# uncomment for now and see what happens
     cdef double p
     cdef double sum_logp = 0
     cdef double wp_outlier = w_outlier * p_outlier
     cdef double alfa
     cdef double pos_alfa
-
-
-
-
-    # parameters added for two-step 
-    # cdef double w
-    # cdef double gamma
-    # cdef double lambda_
-
     # cdef np.ndarray[double, ndim=1] qs = np.array([q, q])
-    # cdef np.ndarray[double, ndim=1] qs1 = np.array([q, q]) # initial value for 1st stage choice
-    # cdef np.ndarray[int, ndim=1] planets
-
-
-
-
-
-    # uncomment for now and see what happens
-    # cdef np.ndarray[double, ndim=1] x1s
-    # cdef np.ndarray[double, ndim=1] x2s
-    # cdef np.ndarray[double, ndim=1] s1s
-    # cdef np.ndarray[double, ndim=1] s2s    
-    # cdef np.ndarray[double, ndim=1] feedbacks
-    cdef np.ndarray[long, ndim=1] responses1
-    cdef np.ndarray[long, ndim=1] responses2
-    cdef np.ndarray[long, ndim=1] unique = np.unique(split_by)
-
-
-    # Added by Jungsun Yoo on 2021-11-27 for two-step tasks
-    # uncomment for now and see what happens
     cdef np.ndarray[double, ndim=2] qs_mf = np.ones((comb(nstates,2,exact=True),2))*q # first-stage MF Q-values
     cdef np.ndarray[double, ndim=2] qs_mb = np.ones((nstates, 2))*q # second-stage Q-values
 
-    cdef np.ndarray[double, ndim=1] counter = np.zeros(comb(nstates,2,exact=True))
+    cdef np.ndarray[double, ndim=1] x1s
+    cdef np.ndarray[double, ndim=1] x2s
+    cdef np.ndarray[double, ndim=1] feedbacks
+    cdef np.ndarray[long, ndim=1] responses1
+    cdef np.ndarray[long, ndim=1] responses2
+    cdef np.ndarray[long, ndim=1] unique = np.unique(split_by)    
 
-    cdef np.ndarray[double, ndim=1] Qmb
+    cdef np.ndarray[double, ndim=1] s1s
+    cdef np.ndarray[double, ndim=1] s2s    
 
-    cdef double dtq
-    cdef double dtQ1
-    cdef double dtQ2
-    cdef double rt
+    # Added by Jungsun Yoo on 2021-11-27 for two-step tasks
+    # parameters added for two-step
 
-    cdef np.ndarray[double, ndim=2] Tm = np.array([[0.7, 0.3], [0.3, 0.7]]) # transition matrix
-    cdef np.ndarray[double, ndim=2] state_combinations = np.array(list(itertools.combinations(np.arange(nstates),2)))
+    # cdef double w
+    # cdef double gamma
+    # cdef double lambda_
+    # cdef np.ndarray[int, ndim=1] planets
+    #cdef np.ndarray[double, ndim=1] 
+    counter = np.zeros(comb(nstates,2,exact=True))
+    # cdef np.ndarray[double, ndim=1] Qmb
+    # cdef double dtq
+    # cdef double rt
+    #cdef np.ndarray[double, ndim=2] 
+    Tm = np.array([[0.7, 0.3], [0.3, 0.7]]) # transition matrix
+    #cdef np.ndarray[double, ndim=2] 
+    state_combinations = np.array(list(itertools.combinations(np.arange(nstates),2)))
 
     if not p_outlier_in_range(p_outlier):
         return -np.inf
