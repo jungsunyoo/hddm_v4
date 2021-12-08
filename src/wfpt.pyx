@@ -180,11 +180,18 @@ def wiener_like_rlddm_2step(np.ndarray[double, ndim=1] x1, # 1st-stage RT
     cdef Py_ssize_t i, j
     cdef Py_ssize_t s_size
     cdef int s
-    cdef double p
-    cdef double sum_logp = 0
-    cdef double wp_outlier = w_outlier * p_outlier
-    cdef double alfa
-    cdef double pos_alfa
+
+
+# uncomment for now and see what happens
+    # cdef double p
+    # cdef double sum_logp = 0
+    # cdef double wp_outlier = w_outlier * p_outlier
+    # cdef double alfa
+    # cdef double pos_alfa
+
+
+
+
     # parameters added for two-step 
     # cdef double w
     # cdef double gamma
@@ -218,10 +225,11 @@ def wiener_like_rlddm_2step(np.ndarray[double, ndim=1] x1, # 1st-stage RT
 
     cdef np.ndarray[double, ndim=1] Qmb
 
-    cdef double dtq
-    cdef double dtQ1
-    cdef double dtQ2
-    cdef double rt
+# uncomment for now and see what happens
+    # cdef double dtq
+    # cdef double dtQ1
+    # cdef double dtQ2
+    # cdef double rt
 
     cdef np.ndarray[double, ndim=2] Tm = np.array([[0.7, 0.3], [0.3, 0.7]]) # transition matrix
     cdef np.ndarray[int, ndim=2] state_combinations = np.array(list(itertools.combinations(np.arange(nstates),2)))
