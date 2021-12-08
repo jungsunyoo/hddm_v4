@@ -189,30 +189,27 @@ def wiener_like_rlddm_2step(np.ndarray[double, ndim=1] x1, # 1st-stage RT
     cdef np.ndarray[double, ndim=2] qs_mf = np.ones((comb(nstates,2,exact=True),2))*q # first-stage MF Q-values
     cdef np.ndarray[double, ndim=2] qs_mb = np.ones((nstates, 2))*q # second-stage Q-values
 
-    # cdef np.ndarray[double, ndim=1] x1s
-    # cdef np.ndarray[double, ndim=1] x2s
-    # cdef np.ndarray[double, ndim=1] feedbacks
-    # cdef np.ndarray[long, ndim=1] responses1
-    # cdef np.ndarray[long, ndim=1] responses2
+    cdef np.ndarray[double, ndim=1] x1s
+    cdef np.ndarray[double, ndim=1] x2s
+    cdef np.ndarray[double, ndim=1] feedbacks
+    cdef np.ndarray[long, ndim=1] responses1
+    cdef np.ndarray[long, ndim=1] responses2
     cdef np.ndarray[long, ndim=1] unique = np.unique(split_by)    
 
-    # cdef np.ndarray[double, ndim=1] s1s
-    # cdef np.ndarray[double, ndim=1] s2s    
+    cdef np.ndarray[long, ndim=1] s1s
+    cdef np.ndarray[long, ndim=1] s2s    
 
     # Added by Jungsun Yoo on 2021-11-27 for two-step tasks
     # parameters added for two-step
 
 
-    # cdef np.ndarray[int, ndim=1] planets
-    #cdef np.ndarray[double, ndim=1] 
-    counter = np.zeros(comb(nstates,2,exact=True))
+    cdef np.ndarray[long, ndim=1] planets
+    cdef np.ndarray[long, ndim=1] counter = np.zeros(comb(nstates,2,exact=True))
     # cdef np.ndarray[double, ndim=1] Qmb
-    # cdef double dtq
-    # cdef double rt
-    #cdef np.ndarray[double, ndim=2] 
-    Tm = np.array([[0.7, 0.3], [0.3, 0.7]]) # transition matrix
-    #cdef np.ndarray[double, ndim=2] 
-    state_combinations = np.array(list(itertools.combinations(np.arange(nstates),2)))
+    cdef double dtq
+    cdef double rt
+    cdef np.ndarray[double, ndim=2] Tm = np.array([[0.7, 0.3], [0.3, 0.7]]) # transition matrix
+    cdef np.ndarray[long, ndim=2] state_combinations = np.array(list(itertools.combinations(np.arange(nstates),2)))
 
     if not p_outlier_in_range(p_outlier):
         return -np.inf
