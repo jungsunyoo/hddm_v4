@@ -205,13 +205,11 @@ def wiener_like_rlddm_2step(np.ndarray[double, ndim=1] x1, # 1st-stage RT
 
     cdef np.ndarray[long, ndim=1] planets
     cdef np.ndarray[double, ndim=1] counter = np.zeros(comb(nstates,2,exact=True))
-    # cdef np.ndarray[double, ndim=1] Qmb
-    # cdef double dtq
-    # cdef double rt
-    #cdef np.ndarray[double, ndim=2] 
-    Tm = np.array([[0.7, 0.3], [0.3, 0.7]]) # transition matrix
-    #cdef np.ndarray[double, ndim=2] 
-    state_combinations = np.array(list(itertools.combinations(np.arange(nstates),2)))
+    cdef np.ndarray[double, ndim=1] Qmb
+    cdef double dtq
+    cdef double rt
+    cdef np.ndarray[double, ndim=2] Tm = np.array([[0.7, 0.3], [0.3, 0.7]]) # transition matrix
+    cdef np.ndarray[long, ndim=2] state_combinations = np.array(list(itertools.combinations(np.arange(nstates),2)))
 
     if not p_outlier_in_range(p_outlier):
         return -np.inf
