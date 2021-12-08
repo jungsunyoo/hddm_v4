@@ -18,7 +18,8 @@ import hddm
 import scipy.integrate as integrate
 from copy import copy
 import numpy as np
-from math import comb
+# from math import comb
+from scipy.special import comb
 # cimport math
 import itertools
 
@@ -199,10 +200,10 @@ def wiener_like_rlddm_2step(np.ndarray[double, ndim=1] x1, # 1st-stage RT
 
 
     # Added by Jungsun Yoo on 2021-11-27 for two-step tasks
-    cdef np.ndarray[double, ndim=2] qs_mf = np.ones((comb(nstates,2),2))*q # first-stage MF Q-values
+    cdef np.ndarray[double, ndim=2] qs_mf = np.ones((comb(nstates,2,exact=True),2))*q # first-stage MF Q-values
     cdef np.ndarray[double, ndim=2] qs_mb = np.ones((nstates, 2))*q # second-stage Q-values
 
-    cdef np.ndarray[int, ndim=1] counter = np.zeros(comb(nstates,2))
+    cdef np.ndarray[int, ndim=1] counter = np.zeros(comb(nstates,2,exact=True))
 
     cdef np.ndarray[double, ndim=1] Qmb
 
