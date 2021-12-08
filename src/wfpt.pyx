@@ -157,13 +157,13 @@ def wiener_like_rlddm(np.ndarray[double, ndim=1] x,
 
 
 # JY added on 2021-12-05 for two-step tasks
-def wiener_like_rlddm_2step(np.ndarray[long, ndim=1] x1, # 1st-stage RT
-                      np.ndarray[long, ndim=1] x2, # 2nd-stage RT
+def wiener_like_rlddm_2step(np.ndarray[double, ndim=1] x1, # 1st-stage RT
+                      np.ndarray[double, ndim=1] x2, # 2nd-stage RT
                       np.ndarray[long,ndim=1] s1, # 1st-stage state
                       np.ndarray[long,ndim=1] s2, # 2nd-stage state
                       np.ndarray[long, ndim=1] response1,
                       np.ndarray[long, ndim=1] response2,
-                      np.ndarray[long, ndim=1] feedback,
+                      np.ndarray[double, ndim=1] feedback,
                       np.ndarray[long, ndim=1] split_by,
                       double q, double alpha, double pos_alpha, 
 
