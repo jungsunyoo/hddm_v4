@@ -228,8 +228,8 @@ def wienerRL_like_2step(x, v, alpha, pos_alpha, w, gamma, lambda_, sv, a, z, sz,
     wp = wiener_params
     response1 = x["response1"].values.astype(int)
     response2 = x["response2"].values.astype(int)
-    state1 = x["state1"].values.astype(int)
-    state2 = x["state2"].values.astype(int)
+    state1 = x["state1"].values.astype(float)
+    state2 = x["state2"].values.astype(float)
 
 
     q = x["q_init"].iloc[0]
@@ -239,7 +239,7 @@ def wienerRL_like_2step(x, v, alpha, pos_alpha, w, gamma, lambda_, sv, a, z, sz,
 
     # YJS added for two-step tasks on 2021-12-05
     # nstates = x["nstates"].values.astype(int)
-    nstates = max(x["state2"].values.astype(int)) + 1
+    nstates = max(x["state2"].values.astype(float)) + 1
 
 
     return wiener_like_rlddm_2step(
