@@ -193,9 +193,11 @@ def wiener_like_rlddm_2step(np.ndarray[double, ndim=1] x1, # 1st-stage RT
     # cdef np.ndarray[double, ndim=1] qs = np.array([q, q])
     # cdef np.ndarray[double, ndim=1] qs1 = np.array([q, q]) # initial value for 1st stage choice
     # cdef np.ndarray[int, ndim=1] planets
-    cdef np.ndarray[double, ndim=1] xs
+    cdef np.ndarray[double, ndim=1] x1s
+    cdef np.ndarray[double, ndim=1] x2s
     cdef np.ndarray[double, ndim=1] feedbacks
-    cdef np.ndarray[long, ndim=1] responses
+    cdef np.ndarray[long, ndim=1] responses1
+    cdef np.ndarray[long, ndim=1] responses2
     cdef np.ndarray[long, ndim=1] unique = np.unique(split_by)
 
 
