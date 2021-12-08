@@ -210,6 +210,7 @@ def wiener_like_rlddm_2step(np.ndarray[double, ndim=1] x1, # 1st-stage RT
     cdef double dtq
     cdef double dtQ1
     cdef double dtQ2
+    cdef double rt
 
     cdef np.ndarray[double, ndim=2] Tm = np.array([[0.7, 0.3], [0.3, 0.7]]) # transition matrix
     cdef np.ndarray[int, ndim=2] state_combinations = np.array(list(itertools.combinations(np.arange(nstates),2)))
@@ -263,10 +264,12 @@ def wiener_like_rlddm_2step(np.ndarray[double, ndim=1] x1, # 1st-stage RT
                 qs = w * Qmb + (1-w) * qs_mf[s1s[i],:] # Update for 1st trial 
 
                 dtq = qs[1] - qs[0]
+                rt = x1s[i]
                 if qs[0] > qs[1]:
                     dtq = -dtq
+                    rt = -rt
 
-                p = full_pdf(x1s[i], (dtq * v), sv, a, z,
+                p = full_pdf(rt, (dtq * v), sv, a, z,
                              sz, t, st, err, n_st, n_sz, use_adaptive, simps_err)
                 # If one probability = 0, the log sum will be -Inf
                 p = p * (1 - p_outlier) + wp_outlier
@@ -278,9 +281,11 @@ def wiener_like_rlddm_2step(np.ndarray[double, ndim=1] x1, # 1st-stage RT
                 # 2nd stage
                 qs = qs_mb[s2s[i],:]
                 dtq = qs[1] - qs[0]
+                rt = x2s[i]
                 if qs[0] > qs[1]:
-                    dtq = -dtq               
-                p = full_pdf(x2s[i], (dtq * v), sv, a, z, sz, t, st, err, n_st, n_sz, use_adaptive, simps_err)
+                    dtq = -dtq
+                    rt = -rt           
+                p = full_pdf(rt, (dtq * v), sv, a, z, sz, t, st, err, n_st, n_sz, use_adaptive, simps_err)
 
 
 

@@ -119,16 +119,21 @@ def flip_errors(data):
             Input array with RTs sign flipped where 'response' == 0
 
     """
-    # Check if data is already flipped
-    if np.any(data["rt"] < 0):
-        return data
 
-    # Copy data
-    data = pd.DataFrame(data.copy())
 
-    # Flip sign for lower boundary response
-    idx = data["response"] == 0
-    data.loc[idx, "rt"] = -data.loc[idx, "rt"]
+    
+    # # Check if data is already flipped
+    # # if np.any(data["rt"] < 0):
+    # # JY changed for two-step tasks
+    # if np.any(data["rt1"] < 0) or np.any(data["rt2"]<0):
+    #     return data
+
+    # # Copy data
+    # data = pd.DataFrame(data.copy())
+
+    # # Flip sign for lower boundary response
+    # idx = data["response"] == 0
+    # data.loc[idx, "rt"] = -data.loc[idx, "rt"]
 
     return data
 
