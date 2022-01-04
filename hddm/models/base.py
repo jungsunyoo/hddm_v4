@@ -1122,7 +1122,8 @@ class HDDMBase(AccumulatorModel):
         if model_config[self.model]["n_choices"] == 2:
             print("Includes supplied: ", include)
             # self.include = set(["v", "a", "t"])
-            self.include = set(["v", "a", "t", "v0", "v1", "v2"])
+            # self.include = set(["v", "a", "t", "v0", "v1", "v2"])
+            self.include = set(["a", "t", "v0", "v1", "v2"])
             if include is not None:
                 if include == "all":
                     [
