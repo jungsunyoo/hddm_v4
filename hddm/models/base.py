@@ -1250,7 +1250,7 @@ class HDDMBase(AccumulatorModel):
             )
 
             wfpt_parents["a"] = knodes["a_bottom"]
-            wfpt_parents["v"] = knodes["v_bottom"]
+            # wfpt_parents["v"] = knodes["v_bottom"]
             # JY added for regression on 2022-01-04
             wfpt_parents["v0"] = knodes["v0_bottom"]
             wfpt_parents["v1"] = knodes["v1_bottom"]
