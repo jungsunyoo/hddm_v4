@@ -303,15 +303,15 @@ class HDDM(HDDMBase):
                     "v0", value=0, g_tau=50 ** -2, std_std=10
                 )
             )
-
-       if "v1" in include: # Slope
+        
+        if "v1" in include: # Slope
             knodes.update(
                 self._create_family_normal_normal_hnormal(
                     "v1", value=2, g_mu=2, g_tau=3 ** -2, std_std=2
                 )
             )
 
-       if "v2" in include: # Slope
+        if "v2" in include: # Slope
             knodes.update(
                 self._create_family_normal_normal_hnormal(
                     "v2", value=2, g_mu=2, g_tau=3 ** -2, std_std=2
@@ -361,14 +361,14 @@ class HDDM(HDDMBase):
                 )
             )
 
-       if "z1" in include: # Slope
+        if "z1" in include: # Slope
             knodes.update(
                 self._create_family_normal_normal_hnormal(
                     "z1", value=2, g_mu=2, g_tau=3 ** -2, std_std=2
                 )
             )
 
-       if "z2" in include: # Slope
+        if "z2" in include: # Slope
             knodes.update(
                 self._create_family_normal_normal_hnormal(
                     "z2", value=2, g_mu=2, g_tau=3 ** -2, std_std=2
