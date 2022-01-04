@@ -145,6 +145,9 @@ class HDDM(HDDMBase):
             "t_std": 0.15,
             "sz": 1.1,
             "v": 1.5,
+            "v0": 1.5, # JY: not sure about this. 
+            "v1": 1.5, # JY: not sure about this. 
+            "v2": 1.5, # JY: not sure about this.            
             "st": 0.1,
             "sv": 3,
             "z_trans": 0.2,
@@ -241,6 +244,28 @@ class HDDM(HDDMBase):
                     "v", value=2, g_mu=2, g_tau=3 ** -2, std_std=2
                 )
             )
+
+        if "v0" in include:
+            knodes.update(
+                self._create_family_normal_normal_hnormal(
+                    "v0", value=2, g_mu=2, g_tau=3 ** -2, std_std=2
+                )
+            )
+
+        if "v1" in include:
+            knodes.update(
+                self._create_family_normal_normal_hnormal(
+                    "v1", value=2, g_mu=2, g_tau=3 ** -2, std_std=2
+                )
+            )            
+
+        if "v2" in include:
+            knodes.update(
+                self._create_family_normal_normal_hnormal(
+                    "v2", value=2, g_mu=2, g_tau=3 ** -2, std_std=2
+                )
+            )
+
         if "t" in include:
             knodes.update(
                 self._create_family_gamma_gamma_hnormal(
