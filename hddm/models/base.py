@@ -1121,7 +1121,8 @@ class HDDMBase(AccumulatorModel):
         # For 2-choice models adjust include statement
         if model_config[self.model]["n_choices"] == 2:
             print("Includes supplied: ", include)
-            self.include = set(["v", "a", "t"])
+            # self.include = set(["v", "a", "t"])
+            self.include = set(["a", "t"])
             if include is not None:
                 if include == "all":
                     [
