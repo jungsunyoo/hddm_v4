@@ -270,7 +270,7 @@ class HDDMrl(HDDM):
         wfpt_parents["pos_alpha"] = knodes["pos_alpha_bottom"] if self.dual else 100.00
 
 
-        wfpt_parents["w"] = knodes["w_bottom"]
+        # wfpt_parents["w"] = knodes["w_bottom"]
         wfpt_parents["gamma"] = knodes["gamma_bottom"]
         wfpt_parents["lambda_"] = knodes["lambda__bottom"]
 
