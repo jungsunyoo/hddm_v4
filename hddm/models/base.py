@@ -1121,7 +1121,8 @@ class HDDMBase(AccumulatorModel):
         # For 2-choice models adjust include statement
         if model_config[self.model]["n_choices"] == 2:
             print("Includes supplied: ", include)
-            self.include = set(["v", "a", "t"])
+            # self.include = set(["v", "a", "t"])
+            self.include = set(["v", "a", "t", "v0", "v1", "v2"])
             if include is not None:
                 if include == "all":
                     [
@@ -1135,6 +1136,7 @@ class HDDMBase(AccumulatorModel):
 
             if bias:
                 self.include.add("z")
+                # self.include.add("z", "z0", "z1", "z2")
 
         else:
             self.include = set()
@@ -1156,6 +1158,13 @@ class HDDMBase(AccumulatorModel):
                 "sv",
                 "p_outlier",
                 "alpha",
+                # JY added for regression
+                "v0", 
+                "v1", 
+                "v2", 
+                "z0", 
+                "z1", 
+                "z2"
             )
 
         # possible_parameters = ("v", "a", "t", "z", "st", "sz", "sv", "p_outlier", "dual_alpha",
@@ -1241,6 +1250,12 @@ class HDDMBase(AccumulatorModel):
 
             wfpt_parents["a"] = knodes["a_bottom"]
             wfpt_parents["v"] = knodes["v_bottom"]
+            # JY added for regression on 2022-01-04
+            wfpt_parents["v0"] = knodes["v0_bottom"]
+            wfpt_parents["v1"] = knodes["v1_bottom"]
+            wfpt_parents["v2"] = knodes["v2_bottom"]
+
+
             wfpt_parents["t"] = knodes["t_bottom"]
 
             wfpt_parents["sv"] = (
@@ -1258,7 +1273,7 @@ class HDDMBase(AccumulatorModel):
                 if "st" in self.include
                 else self.default_intervars["st"]
             )
-            wfpt_parents["z"] = knodes["z_bottom"] if "z" in self.include else 0.5
+            wfpt_parents["z"] = knodes["z_bottom"] if "z" in self.include else 0.5 # change this later when including bias
         return wfpt_parents
 
     def _create_wfpt_knode(self, knodes):
