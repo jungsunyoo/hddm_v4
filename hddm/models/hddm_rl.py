@@ -417,8 +417,8 @@ def wienerRL_like_2step_reg(x, v0, v1, v2, alpha, pos_alpha, gamma, lambda_, sv,
         x["rt1"].values,
         x["rt2"].values,
 
-        isleft1,
-        isleft2,
+        # isleft1,
+        # isleft2,
 
         state1,
         state2,
@@ -447,7 +447,7 @@ def wienerRL_like_2step_reg(x, v0, v1, v2, alpha, pos_alpha, gamma, lambda_, sv,
         nstates,
         st,
         p_outlier=p_outlier,
-        # **wp
+        **wp
     )
 # WienerRL = stochastic_from_dist("wienerRL", wienerRL_like)
 # WienerRL = stochastic_from_dist("wienerRL_2step", wienerRL_like_2step)
