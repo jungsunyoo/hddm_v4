@@ -358,9 +358,30 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
                       double a, 
                       double z, double sz, double t,
                       int nstates,
-                      double st, double err, int n_st=10, int n_sz=10, bint use_adaptive=1, double simps_err=1e-8,
-                      double p_outlier=0, double w_outlier=0,
+                      double st, 
+                      double p_outlier=0
+                      # double err, int n_st=10, int n_sz=10, bint use_adaptive=1, double simps_err=1e-8,
+                      # double p_outlier=0, double w_outlier=0,
                       ):
+
+
+
+        # "err": 1e-4,
+        # "n_st": 2,
+        # "n_sz": 2,
+        # "use_adaptive": 1,
+        # "simps_err": 1e-3,
+        # "w_outlier": 0.1,
+
+    cdef double err=1e-4
+    cdef int n_st = 2
+    cdef int n_sz = 2
+    cdef bint use_adaptive = 1
+    cdef double simps_err = 1e-3
+    cdef w_outlier = 0.1
+
+
+
     cdef Py_ssize_t size = x1.shape[0]
     cdef Py_ssize_t i, j
     cdef Py_ssize_t s_size
