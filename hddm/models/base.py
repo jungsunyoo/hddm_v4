@@ -1121,8 +1121,7 @@ class HDDMBase(AccumulatorModel):
         # For 2-choice models adjust include statement
         if model_config[self.model]["n_choices"] == 2:
             print("Includes supplied: ", include)
-            # self.include = set(["v", "a", "t"])
-            self.include = set(["a", "t"])
+            self.include = set(["v", "a", "t"])
             if include is not None:
                 if include == "all":
                     [
@@ -1241,7 +1240,7 @@ class HDDMBase(AccumulatorModel):
             )
 
             wfpt_parents["a"] = knodes["a_bottom"]
-            # wfpt_parents["v"] = knodes["v_bottom"]
+            wfpt_parents["v"] = knodes["v_bottom"]
             wfpt_parents["t"] = knodes["t_bottom"]
 
             wfpt_parents["sv"] = (

@@ -353,7 +353,7 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
                       double gamma, double lambda_, 
 
                       double v0, double v1, double v2, 
-                      # double v, # don't use second stage
+                      double v, # don't use second stage
                       double sv, 
                       double a, 
                       double z, double sz, double t,
@@ -412,7 +412,7 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
     cdef np.ndarray[long, ndim=1] planets
     cdef np.ndarray[double, ndim=1] counter = np.zeros(comb(nstates,2,exact=True))
     cdef np.ndarray[double, ndim=1] Qmb
-    # cdef double dtq
+    cdef double dtq
     cdef double rt
     cdef np.ndarray[double, ndim=2] Tm = np.array([[0.7, 0.3], [0.3, 0.7]]) # transition matrix
     cdef np.ndarray[long, ndim=2] state_combinations = np.array(list(itertools.combinations(np.arange(nstates),2)))
@@ -494,13 +494,14 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
 
 
                 # # 2nd stage
-                # qs = qs_mb[s2s[i],:]
-                # dtq = qs[1] - qs[0]
-                # rt = x2s[i]
+                qs = qs_mb[s2s[i],:]
+                dtq = qs[1] - qs[0]
+                rt = x2s[i]
+                if isleft2s[i] == 0:
                 # if qs[0] > qs[1]:
-                #     dtq = -dtq
-                #     rt = -rt           
-                # p = full_pdf(rt, (dtq * v), sv, a, z, sz, t, st, err, n_st, n_sz, use_adaptive, simps_err)
+                    dtq = -dtq
+                    rt = -rt           
+                p = full_pdf(rt, (dtq * v), sv, a, z, sz, t, st, err, n_st, n_sz, use_adaptive, simps_err)
 
 
 
