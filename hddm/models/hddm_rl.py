@@ -335,7 +335,9 @@ class HDDMrl(HDDM):
         wfpt_parents["gamma"] = knodes["gamma_bottom"]
         wfpt_parents["lambda_"] = knodes["lambda__bottom"]
 
-
+        wfpt_parents["v0"] = knodes["v0_bottom"]
+        wfpt_parents["v1"] = knodes["v1_bottom"]
+        wfpt_parents["v2"] = knodes["v2_bottom"]
 
 
         return wfpt_parents
