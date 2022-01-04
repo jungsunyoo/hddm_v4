@@ -80,18 +80,18 @@ class HDDMrl(HDDM):
                         std_value=0.1,
                     )
                 )
-            if self.w:
-                knodes.update(
-                    self._create_family_normal_non_centered(
-                        "w",
-                        value=0,
-                        g_mu=0.2,
-                        g_tau=3 ** -2,
-                        std_lower=1e-10,
-                        std_upper=10,
-                        std_value=0.1,
-                    )
-                ) 
+            # if self.w:
+            #     knodes.update(
+            #         self._create_family_normal_non_centered(
+            #             "w",
+            #             value=0,
+            #             g_mu=0.2,
+            #             g_tau=3 ** -2,
+            #             std_lower=1e-10,
+            #             std_upper=10,
+            #             std_value=0.1,
+            #         )
+            #     ) 
             if self.gamma:
                 knodes.update(
                     self._create_family_normal_non_centered(
@@ -141,18 +141,18 @@ class HDDMrl(HDDM):
                         std_value=0.1,
                     )
                 )
-            if self.w:
-                knodes.update(
-                    self._create_family_normal(
-                        "w",
-                        value=0,
-                        g_mu=0.2,
-                        g_tau=3 ** -2,
-                        std_lower=1e-10,
-                        std_upper=10,
-                        std_value=0.1,
-                    )
-                )   
+            # if self.w:
+            #     knodes.update(
+            #         self._create_family_normal(
+            #             "w",
+            #             value=0,
+            #             g_mu=0.2,
+            #             g_tau=3 ** -2,
+            #             std_lower=1e-10,
+            #             std_upper=10,
+            #             std_value=0.1,
+            #         )
+            #     )   
             if self.gamma:
                 knodes.update(
                     self._create_family_normal(
