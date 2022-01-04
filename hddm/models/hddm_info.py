@@ -121,18 +121,12 @@ class HDDM(HDDMBase):
                 "t_std": 0.15,
                 "sz": 1.1,
                 "v": 1.5,
-                "v0": 1.5, # JY: not sure about this. 
-                "v1": 1.5, # JY: not sure about this. 
-                "v2": 1.5, # JY: not sure about this. 
                 "st": 0.1,
                 "sv": 3,
                 "z_trans": 0.2,
                 "z": 0.1,
                 "p_outlier": 1.0,
                 "v_std": 1,
-                "v0_std": 1, # JY: not sure about this. 
-                "v1_std": 1, # JY: not sure about this. 
-                "v2_std": 1, # JY: not sure about this. 
                 "alpha": 1.5,
                 "pos_alpha": 1.5,
             }
@@ -145,9 +139,6 @@ class HDDM(HDDMBase):
             "t_std": 0.15,
             "sz": 1.1,
             "v": 1.5,
-            "v0": 1.5, # JY: not sure about this. 
-            "v1": 1.5, # JY: not sure about this. 
-            "v2": 1.5, # JY: not sure about this.            
             "st": 0.1,
             "sv": 3,
             "z_trans": 0.2,
@@ -244,28 +235,6 @@ class HDDM(HDDMBase):
                     "v", value=2, g_mu=2, g_tau=3 ** -2, std_std=2
                 )
             )
-
-        if "v0" in include:
-            knodes.update(
-                self._create_family_normal_normal_hnormal(
-                    "v0", value=2, g_mu=2, g_tau=3 ** -2, std_std=2
-                )
-            )
-
-        if "v1" in include:
-            knodes.update(
-                self._create_family_normal_normal_hnormal(
-                    "v1", value=2, g_mu=2, g_tau=3 ** -2, std_std=2
-                )
-            )            
-
-        if "v2" in include:
-            knodes.update(
-                self._create_family_normal_normal_hnormal(
-                    "v2", value=2, g_mu=2, g_tau=3 ** -2, std_std=2
-                )
-            )
-
         if "t" in include:
             knodes.update(
                 self._create_family_gamma_gamma_hnormal(
@@ -318,31 +287,6 @@ class HDDM(HDDMBase):
                     "v", value=0, g_tau=50 ** -2, std_std=10
                 )
             )
-        # JY modified for manual implementation of regression within wfpt.pyx
-        if "v0" in include:
-            # This is intercept for v0
-            # according to hddm_rl_regression.py, "For the intercept
-            # we want to use the original parameters' prior."
-            knodes.update(
-                self._create_family_normal_normal_hnormal(
-                    "v0", value=0, g_tau=50 ** -2, std_std=10
-                )
-            )
-        
-        if "v1" in include: # Slope
-            knodes.update(
-                self._create_family_normal_normal_hnormal(
-                    "v1", value=2, g_mu=2, g_tau=3 ** -2, std_std=2
-                )
-            )
-
-        if "v2" in include: # Slope
-            knodes.update(
-                self._create_family_normal_normal_hnormal(
-                    "v2", value=2, g_mu=2, g_tau=3 ** -2, std_std=2
-                )
-            )
-
         if "t" in include:
             knodes.update(
                 self._create_family_trunc_normal("t", lower=1e-3, upper=1e3, value=0.01)
@@ -373,30 +317,6 @@ class HDDM(HDDMBase):
             knodes.update(
                 self._create_family_invlogit(
                     "z", value=0.5, g_tau=10 ** -2, std_std=0.5
-                )
-            )
-        # JY modified for manual implementation of regression within wfpt.pyx
-        if "z0" in include:
-            # This is intercept for z0
-            # according to hddm_rl_regression.py, "For the intercept
-            # we want to use the            
-            knodes.update(
-                self._create_family_invlogit(
-                    "z0", value=0.5, g_tau=10 ** -2, std_std=0.5
-                )
-            )
-
-        if "z1" in include: # Slope
-            knodes.update(
-                self._create_family_normal_normal_hnormal(
-                    "z1", value=2, g_mu=2, g_tau=3 ** -2, std_std=2
-                )
-            )
-
-        if "z2" in include: # Slope
-            knodes.update(
-                self._create_family_normal_normal_hnormal(
-                    "z2", value=2, g_mu=2, g_tau=3 ** -2, std_std=2
                 )
             )
         if "p_outlier" in include:
