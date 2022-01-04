@@ -1241,7 +1241,7 @@ class HDDMBase(AccumulatorModel):
             )
 
             wfpt_parents["a"] = knodes["a_bottom"]
-            wfpt_parents["v"] = knodes["v_bottom"]
+            # wfpt_parents["v"] = knodes["v_bottom"]
             wfpt_parents["t"] = knodes["t_bottom"]
 
             wfpt_parents["sv"] = (
