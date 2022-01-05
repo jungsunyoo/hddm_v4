@@ -159,8 +159,6 @@ def wiener_like_rlddm(np.ndarray[double, ndim=1] x,
 # JY added on 2021-12-05 for two-step tasks
 def wiener_like_rlddm_2step(np.ndarray[double, ndim=1] x1, # 1st-stage RT
                       np.ndarray[double, ndim=1] x2, # 2nd-stage RT
-                      np.ndarray[long, ndim=1] isleft1, # whether left response 1st-stage, 
-                      np.ndarray[long, ndim=1] isleft2, # whether left response 2nd-stage                        
                       np.ndarray[long,ndim=1] s1, # 1st-stage state
                       np.ndarray[long,ndim=1] s2, # 2nd-stage state
                       np.ndarray[long, ndim=1] response1,
@@ -169,8 +167,7 @@ def wiener_like_rlddm_2step(np.ndarray[double, ndim=1] x1, # 1st-stage RT
                       np.ndarray[long, ndim=1] split_by,
                       double q, double alpha, double pos_alpha, 
 
-                      # double w, 
-                      double gamma, double lambda_, 
+                      double w, double gamma, double lambda_, 
 
 
                       double v, 
@@ -179,14 +176,6 @@ def wiener_like_rlddm_2step(np.ndarray[double, ndim=1] x1, # 1st-stage RT
                       double st, double err, int n_st=10, int n_sz=10, bint use_adaptive=1, double simps_err=1e-8,
                       double p_outlier=0, double w_outlier=0,
                       ):
-
-
-
-    # cdef double w = 0
-    cdef double v0 = 0.3
-    cdef double v1 = 0.4
-    cdef double v2 = 0.4
-
     cdef Py_ssize_t size = x1.shape[0]
     cdef Py_ssize_t i, j
     cdef Py_ssize_t s_size
@@ -216,15 +205,10 @@ def wiener_like_rlddm_2step(np.ndarray[double, ndim=1] x1, # 1st-stage RT
 
     cdef np.ndarray[long, ndim=1] s1s
     cdef np.ndarray[long, ndim=1] s2s    
-    cdef np.ndarray[long, ndim=1] isleft1s
-    cdef np.ndarray[long, ndim=1] isleft2s   
+
     # Added by Jungsun Yoo on 2021-11-27 for two-step tasks
     # parameters added for two-step
 
-    # for reg
-    cdef double v_
-    cdef double dtq_mb
-    cdef double dtq_mf
 
     cdef np.ndarray[long, ndim=1] planets
     cdef np.ndarray[double, ndim=1] counter = np.zeros(comb(nstates,2,exact=True))
@@ -253,11 +237,6 @@ def wiener_like_rlddm_2step(np.ndarray[double, ndim=1] x1, # 1st-stage RT
         x2s = x2[split_by == s]
         s1s = s1[split_by == s]
         s2s = s2[split_by == s]
-
-        isleft1s = isleft1[split_by == s]
-        isleft2s = isleft2[split_by == s]
-
-
         s_size = x1s.shape[0]
         qs_mf[:,0] = q
         qs_mf[:,1] = q
@@ -285,20 +264,15 @@ def wiener_like_rlddm_2step(np.ndarray[double, ndim=1] x1, # 1st-stage RT
                 # 1st stage
                 planets = state_combinations[s1s[i]]
                 Qmb = np.dot(Tm, [np.max(qs_mb[planets[0],:]), np.max(qs_mb[planets[1],:])])
-                # qs = w * Qmb + (1-w) * qs_mf[s1s[i],:] # Update for 1st trial 
-                dtq_mb = Qmb[0] - Qmb[1]
-                dtq_mf = qs_mf[s1s[i],0] - qs_mf[s1s[i],1]
-                v_ = v0 + (dtq_mb * v1) + (dtq_mf * v2) 
+                qs = w * Qmb + (1-w) * qs_mf[s1s[i],:] # Update for 1st trial 
 
-                # dtq = qs[1] - qs[0]
+                dtq = qs[1] - qs[0]
                 rt = x1s[i]
-                # if qs[0] > qs[1]:
-                if isleft1s[i] == 0:                
-                    # dtq = -dtq
-                    v_ = -v_
+                if qs[0] > qs[1]:
+                    dtq = -dtq
                     rt = -rt
 
-                p = full_pdf(rt, v_, sv, a, z,
+                p = full_pdf(rt, (dtq * v), sv, a, z,
                              sz, t, st, err, n_st, n_sz, use_adaptive, simps_err)
                 # If one probability = 0, the log sum will be -Inf
                 p = p * (1 - p_outlier) + wp_outlier
@@ -311,8 +285,7 @@ def wiener_like_rlddm_2step(np.ndarray[double, ndim=1] x1, # 1st-stage RT
                 qs = qs_mb[s2s[i],:]
                 dtq = qs[1] - qs[0]
                 rt = x2s[i]
-                # if qs[0] > qs[1]:
-                if isleft2s[i] == 0:               
+                if qs[0] > qs[1]:
                     dtq = -dtq
                     rt = -rt           
                 p = full_pdf(rt, (dtq * v), sv, a, z, sz, t, st, err, n_st, n_sz, use_adaptive, simps_err)
@@ -323,7 +296,7 @@ def wiener_like_rlddm_2step(np.ndarray[double, ndim=1] x1, # 1st-stage RT
                 # non decision time, drift rate might change between stages 
                 # Q) starting stage of the second stage might depend on the first stage drift rate? -> multistep DDM (Feng)
                 # see whether non-decision time changes as a function of time or common/rare transition (use the condition separtion in HDDM)
-                # Iintertrial parameters -> run with and without, but if we're using the functional form then maybe not include
+                # Intertrial parameters -> run with and without, but if we're using the functional form then maybe not include
 
 
 
@@ -372,35 +345,10 @@ def wiener_like_rlddm_2step(np.ndarray[double, ndim=1] x1, # 1st-stage RT
     return sum_logp
 
 # JY added on 2022-01-03 for simultaneous regression on two-step tasks
-# def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT                      
-#                       np.ndarray[double, ndim=1] x2, # 2nd-stage RT                     
-#                       # np.ndarray[long, ndim=1] isleft1, # whether left response 1st-stage, 
-#                       # np.ndarray[long, ndim=1] isleft2, # whether left response 2nd-stage  
-#                       np.ndarray[long,ndim=1] s1, # 1st-stage state
-#                       np.ndarray[long,ndim=1] s2, # 2nd-stage state
-#                       np.ndarray[long, ndim=1] response1,
-#                       np.ndarray[long, ndim=1] response2,
-#                       np.ndarray[double, ndim=1] feedback,
-#                       np.ndarray[long, ndim=1] split_by,
-#                       double q, double alpha, double pos_alpha, 
-
-#                       # double w, 
-#                       double gamma, double lambda_, 
-
-#                       # double v0, double v1, double v2, 
-#                       double v, # don't use second stage
-#                       double sv, 
-#                       double a, 
-#                       double z, double sz, double t,
-#                       int nstates,
-#                       double st, 
-
-#                       double err, int n_st=10, int n_sz=10, bint use_adaptive=1, double simps_err=1e-8,
-#                       double p_outlier=0, double w_outlier=0,
-#                       ):
-
-def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
-                      np.ndarray[double, ndim=1] x2, # 2nd-stage RT
+def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT                      
+                      np.ndarray[double, ndim=1] x2, # 2nd-stage RT                     
+                      np.ndarray[long, ndim=1] isleft1, # whether left response 1st-stage, 
+                      np.ndarray[long, ndim=1] isleft2, # whether left response 2nd-stage  
                       np.ndarray[long,ndim=1] s1, # 1st-stage state
                       np.ndarray[long,ndim=1] s2, # 2nd-stage state
                       np.ndarray[long, ndim=1] response1,
@@ -412,19 +360,22 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
                       # double w, 
                       double gamma, double lambda_, 
 
-
-                      double v, 
-                      double sv, double a, double z, double sz, double t,
+                      double v0, double v1, double v2, 
+                      double v, # don't use second stage
+                      double sv, 
+                      double a, 
+                      double z, double sz, double t,
                       int nstates,
-                      double st, double err, int n_st=10, int n_sz=10, bint use_adaptive=1, double simps_err=1e-8,
+                      double st, 
+
+                      double err, int n_st=10, int n_sz=10, bint use_adaptive=1, double simps_err=1e-8,
                       double p_outlier=0, double w_outlier=0,
                       ):
 
 
-    cdef double v0 = 0.5
-    cdef double v1 = 0.3
-    cdef double v2 = 0.1
-    # cdef ndarray[long, ndim=1] isleft1 = np.ones()
+
+
+
 
     cdef Py_ssize_t size = x1.shape[0]
     cdef Py_ssize_t i, j
@@ -494,8 +445,8 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
         s1s = s1[split_by == s]
         s2s = s2[split_by == s]
 
-        # isleft1s = isleft1[split_by == s]
-        # isleft2s = isleft2[split_by == s]
+        isleft1s = isleft1[split_by == s]
+        isleft2s = isleft2[split_by == s]
 
         s_size = x1s.shape[0]
         qs_mf[:,0] = q
@@ -528,16 +479,16 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
 
                 # dtq = qs[1] - qs[0]
                 dtq_mb = Qmb[0] - Qmb[1]
-                dtq_mf = qs_mf[0] - qs_mf[1]
+                dtq_mf = qs_mf[s1s[i],0] - qs_mf[s1s[i],1]
                 v_ = v0 + (dtq_mb * v1) + (dtq_mf * v2) 
                 rt = x1s[i]
                 # if qs[0] > qs[1]:
                 #     dtq = -dtq
                 #     rt = -rt
 
-                # if isleft1s[i] == 0: # if chosen right
-                    # rt = -rt
-                    # v_ = -v_
+                if isleft1s[i] == 0: # if chosen right
+                    rt = -rt
+                    v_ = -v_
 
                 # p = full_pdf(rt, (dtq * v), sv, a, z,
                 #              sz, t, st, err, n_st, n_sz, use_adaptive, simps_err)
@@ -554,10 +505,10 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
                 qs = qs_mb[s2s[i],:]
                 dtq = qs[1] - qs[0]
                 rt = x2s[i]
-                # if isleft2s[i] == 0:
+                if isleft2s[i] == 0:
                 # if qs[0] > qs[1]:
-                    # dtq = -dtq
-                    # rt = -rt           
+                    dtq = -dtq
+                    rt = -rt           
                 p = full_pdf(rt, (dtq * v), sv, a, z, sz, t, st, err, n_st, n_sz, use_adaptive, simps_err)
 
 
