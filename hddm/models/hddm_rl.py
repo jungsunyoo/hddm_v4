@@ -393,8 +393,8 @@ def wienerRL_like(x, v, alpha, pos_alpha, sv, a, z, sz, t, st, p_outlier=0):
         **wp
     )
 
-def wienerRL_like_2step(x, v, alpha, pos_alpha, w, gamma, lambda_, sv, a, z, sz, t, st, p_outlier=0):
-
+# def wienerRL_like_2step(x, v, alpha, pos_alpha, w, gamma, lambda_, sv, a, z, sz, t, st, p_outlier=0):
+def wienerRL_like_2step(x, v, alpha, pos_alpha, gamma, lambda_, sv, a, z, sz, t, st, p_outlier=0):
     wiener_params = {
         "err": 1e-4,
         "n_st": 2,
@@ -435,7 +435,7 @@ def wienerRL_like_2step(x, v, alpha, pos_alpha, w, gamma, lambda_, sv, a, z, sz,
         q,
         alpha,
         pos_alpha, 
-        w, # added for two-step task
+        # w, # added for two-step task
         gamma, # added for two-step task 
         lambda_, # added for two-step task 
         v,
@@ -567,6 +567,6 @@ def wienerRL_like_2step_reg(x, v, alpha, pos_alpha, gamma, lambda_, sv, a, z, sz
         **wp
     )
 # WienerRL = stochastic_from_dist("wienerRL", wienerRL_like)
-# WienerRL = stochastic_from_dist("wienerRL_2step", wienerRL_like_2step)
-WienerRL = stochastic_from_dist("wienerRL_2step_reg", wienerRL_like_2step_reg)
+WienerRL = stochastic_from_dist("wienerRL_2step", wienerRL_like_2step)
+# WienerRL = stochastic_from_dist("wienerRL_2step_reg", wienerRL_like_2step_reg)
 

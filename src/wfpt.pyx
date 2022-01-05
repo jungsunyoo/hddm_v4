@@ -167,7 +167,8 @@ def wiener_like_rlddm_2step(np.ndarray[double, ndim=1] x1, # 1st-stage RT
                       np.ndarray[long, ndim=1] split_by,
                       double q, double alpha, double pos_alpha, 
 
-                      double w, double gamma, double lambda_, 
+                      # double w, 
+                      double gamma, double lambda_, 
 
 
                       double v, 
@@ -176,6 +177,11 @@ def wiener_like_rlddm_2step(np.ndarray[double, ndim=1] x1, # 1st-stage RT
                       double st, double err, int n_st=10, int n_sz=10, bint use_adaptive=1, double simps_err=1e-8,
                       double p_outlier=0, double w_outlier=0,
                       ):
+
+
+
+    cdef double w = 0
+
     cdef Py_ssize_t size = x1.shape[0]
     cdef Py_ssize_t i, j
     cdef Py_ssize_t s_size
