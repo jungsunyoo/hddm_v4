@@ -345,10 +345,35 @@ def wiener_like_rlddm_2step(np.ndarray[double, ndim=1] x1, # 1st-stage RT
     return sum_logp
 
 # JY added on 2022-01-03 for simultaneous regression on two-step tasks
-def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT                      
-                      np.ndarray[double, ndim=1] x2, # 2nd-stage RT                     
-                      # np.ndarray[long, ndim=1] isleft1, # whether left response 1st-stage, 
-                      # np.ndarray[long, ndim=1] isleft2, # whether left response 2nd-stage  
+# def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT                      
+#                       np.ndarray[double, ndim=1] x2, # 2nd-stage RT                     
+#                       # np.ndarray[long, ndim=1] isleft1, # whether left response 1st-stage, 
+#                       # np.ndarray[long, ndim=1] isleft2, # whether left response 2nd-stage  
+#                       np.ndarray[long,ndim=1] s1, # 1st-stage state
+#                       np.ndarray[long,ndim=1] s2, # 2nd-stage state
+#                       np.ndarray[long, ndim=1] response1,
+#                       np.ndarray[long, ndim=1] response2,
+#                       np.ndarray[double, ndim=1] feedback,
+#                       np.ndarray[long, ndim=1] split_by,
+#                       double q, double alpha, double pos_alpha, 
+
+#                       # double w, 
+#                       double gamma, double lambda_, 
+
+#                       # double v0, double v1, double v2, 
+#                       double v, # don't use second stage
+#                       double sv, 
+#                       double a, 
+#                       double z, double sz, double t,
+#                       int nstates,
+#                       double st, 
+
+#                       double err, int n_st=10, int n_sz=10, bint use_adaptive=1, double simps_err=1e-8,
+#                       double p_outlier=0, double w_outlier=0,
+#                       ):
+
+def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
+                      np.ndarray[double, ndim=1] x2, # 2nd-stage RT
                       np.ndarray[long,ndim=1] s1, # 1st-stage state
                       np.ndarray[long,ndim=1] s2, # 2nd-stage state
                       np.ndarray[long, ndim=1] response1,
@@ -360,19 +385,13 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
                       # double w, 
                       double gamma, double lambda_, 
 
-                      # double v0, double v1, double v2, 
-                      double v, # don't use second stage
-                      double sv, 
-                      double a, 
-                      double z, double sz, double t,
-                      int nstates,
-                      double st, 
 
-                      double err, int n_st=10, int n_sz=10, bint use_adaptive=1, double simps_err=1e-8,
+                      double v, 
+                      double sv, double a, double z, double sz, double t,
+                      int nstates,
+                      double st, double err, int n_st=10, int n_sz=10, bint use_adaptive=1, double simps_err=1e-8,
                       double p_outlier=0, double w_outlier=0,
                       ):
-
-
 
 
     cdef double v0 = 0.5

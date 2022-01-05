@@ -21,7 +21,7 @@ class HDDMrl(HDDM):
         self.non_centered = kwargs.pop("non_centered", False)
         self.dual = kwargs.pop("dual", False)
         self.alpha = kwargs.pop("alpha", True)
-        self.w = kwargs.pop("w", True) # added for two-step task
+        # self.w = kwargs.pop("w", True) # added for two-step task
         self.gamma = kwargs.pop("gamma", True) # added for two-step task
         self.lambda_ = kwargs.pop("lambda_", True) # added for two-step task
         self.wfpt_rl_class = WienerRL
@@ -80,18 +80,18 @@ class HDDMrl(HDDM):
                         std_value=0.1,
                     )
                 )
-            if self.w:
-                knodes.update(
-                    self._create_family_normal_non_centered(
-                        "w",
-                        value=0,
-                        g_mu=0.2,
-                        g_tau=3 ** -2,
-                        std_lower=1e-10,
-                        std_upper=10,
-                        std_value=0.1,
-                    )
-                ) 
+            # if self.w:
+            #     knodes.update(
+            #         self._create_family_normal_non_centered(
+            #             "w",
+            #             value=0,
+            #             g_mu=0.2,
+            #             g_tau=3 ** -2,
+            #             std_lower=1e-10,
+            #             std_upper=10,
+            #             std_value=0.1,
+            #         )
+            #     ) 
             if self.gamma:
                 knodes.update(
                     self._create_family_normal_non_centered(
@@ -189,18 +189,18 @@ class HDDMrl(HDDM):
                         std_value=0.1,
                     )
                 )
-            if self.w:
-                knodes.update(
-                    self._create_family_normal(
-                        "w",
-                        value=0,
-                        g_mu=0.2,
-                        g_tau=3 ** -2,
-                        std_lower=1e-10,
-                        std_upper=10,
-                        std_value=0.1,
-                    )
-                )   
+            # if self.w:
+            #     knodes.update(
+            #         self._create_family_normal(
+            #             "w",
+            #             value=0,
+            #             g_mu=0.2,
+            #             g_tau=3 ** -2,
+            #             std_lower=1e-10,
+            #             std_upper=10,
+            #             std_value=0.1,
+            #         )
+            #     )   
             if self.gamma:
                 knodes.update(
                     self._create_family_normal(
@@ -282,7 +282,7 @@ class HDDMrl(HDDM):
 
 
 
-            
+
             # )
 
             # if self.z0:
@@ -336,7 +336,7 @@ class HDDMrl(HDDM):
         wfpt_parents["pos_alpha"] = knodes["pos_alpha_bottom"] if self.dual else 100.00
 
 
-        wfpt_parents["w"] = knodes["w_bottom"]
+        # wfpt_parents["w"] = knodes["w_bottom"]
         wfpt_parents["gamma"] = knodes["gamma_bottom"]
         wfpt_parents["lambda_"] = knodes["lambda__bottom"]
 
@@ -438,7 +438,6 @@ def wienerRL_like_2step(x, v, alpha, pos_alpha, w, gamma, lambda_, sv, a, z, sz,
         w, # added for two-step task
         gamma, # added for two-step task 
         lambda_, # added for two-step task 
-
         v,
         sv,
         a,
@@ -484,10 +483,6 @@ def wienerRL_like_2step_reg(x, v, alpha, pos_alpha, gamma, lambda_, sv, a, z, sz
     return wiener_like_rlddm_2step_reg(
         x["rt1"].values,
         x["rt2"].values,
-
-        # isleft1,
-        # isleft2,
-
         state1,
         state2,
         response1,
@@ -500,15 +495,9 @@ def wienerRL_like_2step_reg(x, v, alpha, pos_alpha, gamma, lambda_, sv, a, z, sz
         # w, # added for two-step task
         gamma, # added for two-step task 
         lambda_, # added for two-step task 
-        # v0, # intercept for first stage rt regression
-        # v1, # slope for mb
-        # v2, # slobe for mf
-        v, # don't use second stage for now
+        v,
         sv,
         a,
-        # z0, # bias: added for intercept regression 1st stage
-        # z1, # bias: added for slope regression mb 1st stage
-        # z2, # bias: added for slope regression mf 1st stage
         z,
         sz,
         t,
@@ -518,6 +507,6 @@ def wienerRL_like_2step_reg(x, v, alpha, pos_alpha, gamma, lambda_, sv, a, z, sz
         **wp
     )
 # WienerRL = stochastic_from_dist("wienerRL", wienerRL_like)
-WienerRL = stochastic_from_dist("wienerRL_2step", wienerRL_like_2step)
-# WienerRL = stochastic_from_dist("wienerRL_2step_reg", wienerRL_like_2step_reg)
+# WienerRL = stochastic_from_dist("wienerRL_2step", wienerRL_like_2step)
+WienerRL = stochastic_from_dist("wienerRL_2step_reg", wienerRL_like_2step_reg)
 
