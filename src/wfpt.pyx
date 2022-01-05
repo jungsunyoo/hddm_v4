@@ -287,14 +287,15 @@ def wiener_like_rlddm_2step(np.ndarray[double, ndim=1] x1, # 1st-stage RT
                 Qmb = np.dot(Tm, [np.max(qs_mb[planets[0],:]), np.max(qs_mb[planets[1],:])])
                 # qs = w * Qmb + (1-w) * qs_mf[s1s[i],:] # Update for 1st trial 
                 dtq_mb = Qmb[0] - Qmb[1]
-                dtq_mf = qs_mf[0] - qs_mf[1]
+                dtq_mf = qs_mf[s1s[i],0] - qs_mf[s1s[i],1]
                 v_ = v0 + (dtq_mb * v1) + (dtq_mf * v2) 
 
-                dtq = qs[1] - qs[0]
+                # dtq = qs[1] - qs[0]
                 rt = x1s[i]
                 # if qs[0] > qs[1]:
                 if isleft1s[i] == 0:                
-                    dtq = -dtq
+                    # dtq = -dtq
+                    v_ = -v_
                     rt = -rt
 
                 p = full_pdf(rt, v_, sv, a, z,
