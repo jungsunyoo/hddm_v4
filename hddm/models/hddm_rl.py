@@ -518,6 +518,6 @@ def wienerRL_like_2step_reg(x, v, alpha, pos_alpha, gamma, lambda_, sv, a, z, sz
         **wp
     )
 # WienerRL = stochastic_from_dist("wienerRL", wienerRL_like)
-# WienerRL = stochastic_from_dist("wienerRL_2step", wienerRL_like_2step)
-WienerRL = stochastic_from_dist("wienerRL_2step_reg", wienerRL_like_2step_reg)
+WienerRL = stochastic_from_dist("wienerRL_2step", wienerRL_like_2step)
+# WienerRL = stochastic_from_dist("wienerRL_2step_reg", wienerRL_like_2step_reg)
 
