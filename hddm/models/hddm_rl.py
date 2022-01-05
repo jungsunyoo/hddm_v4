@@ -38,9 +38,9 @@ class HDDMrl(HDDM):
         self.gamma = kwargs.pop("gamma", True) # added for two-step task
         self.lambda_ = kwargs.pop("lambda_", True) # added for two-step task
 
-        self.v0 = kwargs.pop("v0", True)
-        self.v1 = kwargs.pop("v1", True)
-        self.v2 = kwargs.pop("v2", True)
+        # self.v0 = kwargs.pop("v0", True)
+        # self.v1 = kwargs.pop("v1", True)
+        # self.v2 = kwargs.pop("v2", True)
 
 
         # self.z0 = kwargs.pop("z0", True)
@@ -117,49 +117,49 @@ class HDDMrl(HDDM):
                     )
                 )
 
-            if self.v0:
-                knodes.update(
-                    self._create_family_normal_non_centered(
-                        "v0",
-                        value=0,
-                        g_tau=50 ** -2, 
-                        # std_std=10,
-                        # g_mu=0.2,
-                        # g_tau=3 ** -2,
-                        std_lower=1e-10,
-                        std_upper=10,
-                        std_value=0.1,
-                    )
-                )
+            # if self.v0:
+            #     knodes.update(
+            #         self._create_family_normal_non_centered(
+            #             "v0",
+            #             value=0,
+            #             g_tau=50 ** -2, 
+            #             # std_std=10,
+            #             # g_mu=0.2,
+            #             # g_tau=3 ** -2,
+            #             std_lower=1e-10,
+            #             std_upper=10,
+            #             std_value=0.1,
+            #         )
+            #     )
 
-            if self.v1:
-                knodes.update(
-                    self._create_family_normal_non_centered(
-                        "v1",
-                        value=0,
-                        g_tau=50 ** -2, 
-                        # std_std=10,
-                        # g_mu=0.2,
-                        # g_tau=3 ** -2,
-                        std_lower=1e-10,
-                        std_upper=10,
-                        std_value=0.1,
-                    )
-            )
-            if self.v2:
-                knodes.update(
-                    self._create_family_normal_non_centered(
-                        "v2",
-                        value=0,
-                        g_tau=50 ** -2, 
-                        # std_std=10,
-                        # g_mu=0.2,
-                        # g_tau=3 ** -2,
-                        std_lower=1e-10,
-                        std_upper=10,
-                        std_value=0.1,
-                    )
-            )
+            # if self.v1:
+            #     knodes.update(
+            #         self._create_family_normal_non_centered(
+            #             "v1",
+            #             value=0,
+            #             g_tau=50 ** -2, 
+            #             # std_std=10,
+            #             # g_mu=0.2,
+            #             # g_tau=3 ** -2,
+            #             std_lower=1e-10,
+            #             std_upper=10,
+            #             std_value=0.1,
+            #         )
+            # )
+            # if self.v2:
+            #     knodes.update(
+            #         self._create_family_normal_non_centered(
+            #             "v2",
+            #             value=0,
+            #             g_tau=50 ** -2, 
+            #             # std_std=10,
+            #             # g_mu=0.2,
+            #             # g_tau=3 ** -2,
+            #             std_lower=1e-10,
+            #             std_upper=10,
+            #             std_value=0.1,
+            #         )
+            # )
 
 
 
@@ -235,49 +235,54 @@ class HDDMrl(HDDM):
         #     )
 
 # "v0", value=0, g_tau=50 ** -2, std_std=10
-            if self.v0:
-                knodes.update(
-                    self._create_family_normal(
-                        "v0",
-                        value=0,
-                        g_tau=50 ** -2, 
-                        # std_std=10,
-                        # g_mu=0.2,
-                        # g_tau=3 ** -2,
-                        std_lower=1e-10,
-                        std_upper=10,
-                        std_value=0.1,
-                    )
-                )
 
-            if self.v1:
-                knodes.update(
-                    self._create_family_normal(
-                        "v1",
-                        value=0,
-                        g_tau=50 ** -2, 
-                        # std_std=10,
-                        # g_mu=0.2,
-                        # g_tau=3 ** -2,
-                        std_lower=1e-10,
-                        std_upper=10,
-                        std_value=0.1,
-                    )
-            )
-            if self.v2:
-                knodes.update(
-                    self._create_family_normal(
-                        "v2",
-                        value=0,
-                        g_tau=50 ** -2, 
-                        # std_std=10,
-                        # g_mu=0.2,
-                        # g_tau=3 ** -2,
-                        std_lower=1e-10,
-                        std_upper=10,
-                        std_value=0.1,
-                    )
-            )
+            # if self.v0:
+            #     knodes.update(
+            #         self._create_family_normal(
+            #             "v0",
+            #             value=0,
+            #             g_tau=50 ** -2, 
+            #             # std_std=10,
+            #             # g_mu=0.2,
+            #             # g_tau=3 ** -2,
+            #             std_lower=1e-10,
+            #             std_upper=10,
+            #             std_value=0.1,
+            #         )
+            #     )
+
+            # if self.v1:
+            #     knodes.update(
+            #         self._create_family_normal(
+            #             "v1",
+            #             value=0,
+            #             g_tau=50 ** -2, 
+            #             # std_std=10,
+            #             # g_mu=0.2,
+            #             # g_tau=3 ** -2,
+            #             std_lower=1e-10,
+            #             std_upper=10,
+            #             std_value=0.1,
+            #         )
+            # )
+            # if self.v2:
+            #     knodes.update(
+            #         self._create_family_normal(
+            #             "v2",
+            #             value=0,
+            #             g_tau=50 ** -2, 
+            #             # std_std=10,
+            #             # g_mu=0.2,
+            #             # g_tau=3 ** -2,
+            #             std_lower=1e-10,
+            #             std_upper=10,
+            #             std_value=0.1,
+            #         )
+            # )
+
+
+
+            
             # )
 
             # if self.z0:
@@ -335,9 +340,9 @@ class HDDMrl(HDDM):
         wfpt_parents["gamma"] = knodes["gamma_bottom"]
         wfpt_parents["lambda_"] = knodes["lambda__bottom"]
 
-        wfpt_parents["v0"] = knodes["v0_bottom"]
-        wfpt_parents["v1"] = knodes["v1_bottom"]
-        wfpt_parents["v2"] = knodes["v2_bottom"]
+        # wfpt_parents["v0"] = knodes["v0_bottom"]
+        # wfpt_parents["v1"] = knodes["v1_bottom"]
+        # wfpt_parents["v2"] = knodes["v2_bottom"]
 
 
         return wfpt_parents

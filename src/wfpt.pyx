@@ -448,8 +448,8 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
         s1s = s1[split_by == s]
         s2s = s2[split_by == s]
 
-        isleft1s = isleft1[split_by == s]
-        isleft2s = isleft2[split_by == s]
+        # isleft1s = isleft1[split_by == s]
+        # isleft2s = isleft2[split_by == s]
 
         s_size = x1s.shape[0]
         qs_mf[:,0] = q
