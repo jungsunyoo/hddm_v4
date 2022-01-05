@@ -426,6 +426,8 @@ def wienerRL_like_2step(x, v, alpha, pos_alpha, gamma, lambda_, sv, a, z, sz, t,
     return wiener_like_rlddm_2step(
         x["rt1"].values,
         x["rt2"].values,
+        isleft1,
+        isleft2,
         state1,
         state2,
         response1,

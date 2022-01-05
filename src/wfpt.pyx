@@ -159,6 +159,8 @@ def wiener_like_rlddm(np.ndarray[double, ndim=1] x,
 # JY added on 2021-12-05 for two-step tasks
 def wiener_like_rlddm_2step(np.ndarray[double, ndim=1] x1, # 1st-stage RT
                       np.ndarray[double, ndim=1] x2, # 2nd-stage RT
+                      np.ndarray[long, ndim=1] isleft1, # whether left response 1st-stage, 
+                      np.ndarray[long, ndim=1] isleft2, # whether left response 2nd-stage                        
                       np.ndarray[long,ndim=1] s1, # 1st-stage state
                       np.ndarray[long,ndim=1] s2, # 2nd-stage state
                       np.ndarray[long, ndim=1] response1,
@@ -211,7 +213,8 @@ def wiener_like_rlddm_2step(np.ndarray[double, ndim=1] x1, # 1st-stage RT
 
     cdef np.ndarray[long, ndim=1] s1s
     cdef np.ndarray[long, ndim=1] s2s    
-
+    cdef np.ndarray[long, ndim=1] isleft1s
+    cdef np.ndarray[long, ndim=1] isleft2s   
     # Added by Jungsun Yoo on 2021-11-27 for two-step tasks
     # parameters added for two-step
 
@@ -243,6 +246,11 @@ def wiener_like_rlddm_2step(np.ndarray[double, ndim=1] x1, # 1st-stage RT
         x2s = x2[split_by == s]
         s1s = s1[split_by == s]
         s2s = s2[split_by == s]
+
+        isleft1s = isleft1[split_by == s]
+        isleft2s = isleft2[split_by == s]
+
+
         s_size = x1s.shape[0]
         qs_mf[:,0] = q
         qs_mf[:,1] = q
@@ -274,7 +282,8 @@ def wiener_like_rlddm_2step(np.ndarray[double, ndim=1] x1, # 1st-stage RT
 
                 dtq = qs[1] - qs[0]
                 rt = x1s[i]
-                if qs[0] > qs[1]:
+                # if qs[0] > qs[1]:
+                if isleft1s[i] == 0:                
                     dtq = -dtq
                     rt = -rt
 
@@ -291,7 +300,8 @@ def wiener_like_rlddm_2step(np.ndarray[double, ndim=1] x1, # 1st-stage RT
                 qs = qs_mb[s2s[i],:]
                 dtq = qs[1] - qs[0]
                 rt = x2s[i]
-                if qs[0] > qs[1]:
+                # if qs[0] > qs[1]:
+                 if isleft2s[i] == 0:               
                     dtq = -dtq
                     rt = -rt           
                 p = full_pdf(rt, (dtq * v), sv, a, z, sz, t, st, err, n_st, n_sz, use_adaptive, simps_err)
