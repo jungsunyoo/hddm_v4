@@ -17,40 +17,40 @@ class HDDMrl(HDDM):
 
     # just 2-stage rlddm
 
-    # def __init__(self, *args, **kwargs):
-    #     self.non_centered = kwargs.pop("non_centered", False)
-    #     self.dual = kwargs.pop("dual", False)
-    #     self.alpha = kwargs.pop("alpha", True)
-    #     self.w = kwargs.pop("w", True) # added for two-step task
-    #     self.gamma = kwargs.pop("gamma", True) # added for two-step task
-    #     self.lambda_ = kwargs.pop("lambda_", True) # added for two-step task
-    #     self.wfpt_rl_class = WienerRL
-
-    #     super(HDDMrl, self).__init__(*args, **kwargs)
-
-
-    # 2-stage rlddm regression
-
     def __init__(self, *args, **kwargs):
         self.non_centered = kwargs.pop("non_centered", False)
         self.dual = kwargs.pop("dual", False)
         self.alpha = kwargs.pop("alpha", True)
+        self.w = kwargs.pop("w", True) # added for two-step task
         self.gamma = kwargs.pop("gamma", True) # added for two-step task
         self.lambda_ = kwargs.pop("lambda_", True) # added for two-step task
-
-        # self.v0 = kwargs.pop("v0", True)
-        # self.v1 = kwargs.pop("v1", True)
-        # self.v2 = kwargs.pop("v2", True)
-
-
-        # self.z0 = kwargs.pop("z0", True)
-        # self.z1 = kwargs.pop("z1", True)
-        # self.z2 = kwargs.pop("z2", True)
-
-
         self.wfpt_rl_class = WienerRL
 
         super(HDDMrl, self).__init__(*args, **kwargs)
+
+
+    # 2-stage rlddm regression
+
+    # def __init__(self, *args, **kwargs):
+    #     self.non_centered = kwargs.pop("non_centered", False)
+    #     self.dual = kwargs.pop("dual", False)
+    #     self.alpha = kwargs.pop("alpha", True)
+    #     self.gamma = kwargs.pop("gamma", True) # added for two-step task
+    #     self.lambda_ = kwargs.pop("lambda_", True) # added for two-step task
+
+    #     # self.v0 = kwargs.pop("v0", True)
+    #     # self.v1 = kwargs.pop("v1", True)
+    #     # self.v2 = kwargs.pop("v2", True)
+
+
+    #     # self.z0 = kwargs.pop("z0", True)
+    #     # self.z1 = kwargs.pop("z1", True)
+    #     # self.z2 = kwargs.pop("z2", True)
+
+
+    #     self.wfpt_rl_class = WienerRL
+
+    #     super(HDDMrl, self).__init__(*args, **kwargs)
 
     def _create_stochastic_knodes(self, include):
         knodes = super(HDDMrl, self)._create_stochastic_knodes(include)
@@ -80,18 +80,18 @@ class HDDMrl(HDDM):
                         std_value=0.1,
                     )
                 )
-            # if self.w:
-            #     knodes.update(
-            #         self._create_family_normal_non_centered(
-            #             "w",
-            #             value=0,
-            #             g_mu=0.2,
-            #             g_tau=3 ** -2,
-            #             std_lower=1e-10,
-            #             std_upper=10,
-            #             std_value=0.1,
-            #         )
-            #     ) 
+            if self.w:
+                knodes.update(
+                    self._create_family_normal_non_centered(
+                        "w",
+                        value=0,
+                        g_mu=0.2,
+                        g_tau=3 ** -2,
+                        std_lower=1e-10,
+                        std_upper=10,
+                        std_value=0.1,
+                    )
+                ) 
             if self.gamma:
                 knodes.update(
                     self._create_family_normal_non_centered(
@@ -189,18 +189,18 @@ class HDDMrl(HDDM):
                         std_value=0.1,
                     )
                 )
-            # if self.w:
-            #     knodes.update(
-            #         self._create_family_normal(
-            #             "w",
-            #             value=0,
-            #             g_mu=0.2,
-            #             g_tau=3 ** -2,
-            #             std_lower=1e-10,
-            #             std_upper=10,
-            #             std_value=0.1,
-            #         )
-            #     )   
+            if self.w:
+                knodes.update(
+                    self._create_family_normal(
+                        "w",
+                        value=0,
+                        g_mu=0.2,
+                        g_tau=3 ** -2,
+                        std_lower=1e-10,
+                        std_upper=10,
+                        std_value=0.1,
+                    )
+                )   
             if self.gamma:
                 knodes.update(
                     self._create_family_normal(
@@ -336,7 +336,7 @@ class HDDMrl(HDDM):
         wfpt_parents["pos_alpha"] = knodes["pos_alpha_bottom"] if self.dual else 100.00
 
 
-        # wfpt_parents["w"] = knodes["w_bottom"]
+        wfpt_parents["w"] = knodes["w_bottom"]
         wfpt_parents["gamma"] = knodes["gamma_bottom"]
         wfpt_parents["lambda_"] = knodes["lambda__bottom"]
 
