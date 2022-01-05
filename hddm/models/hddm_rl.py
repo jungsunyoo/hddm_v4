@@ -449,9 +449,69 @@ def wienerRL_like_2step(x, v, alpha, pos_alpha, w, gamma, lambda_, sv, a, z, sz,
         p_outlier=p_outlier,
         **wp
     )
-# def wienerRL_like_2step_reg(x, v, alpha, pos_alpha, w, gamma, lambda_, sv, a, z, sz, t, st, p_outlier=0):
-# def wienerRL_like_2step_reg(x, v, v0, v1, v2, alpha, pos_alpha, gamma, lambda_, sv, a, z, sz, t, st, p_outlier=0):
+# # def wienerRL_like_2step_reg(x, v, alpha, pos_alpha, w, gamma, lambda_, sv, a, z, sz, t, st, p_outlier=0):
+# # def wienerRL_like_2step_reg(x, v, v0, v1, v2, alpha, pos_alpha, gamma, lambda_, sv, a, z, sz, t, st, p_outlier=0):
+# def wienerRL_like_2step_reg(x, v, alpha, pos_alpha, gamma, lambda_, sv, a, z, sz, t, st, p_outlier=0):
+#     wiener_params = {
+#         "err": 1e-4,
+#         "n_st": 2,
+#         "n_sz": 2,
+#         "use_adaptive": 1,
+#         "simps_err": 1e-3,
+#         "w_outlier": 0.1,
+#     }
+#     wp = wiener_params
+#     response1 = x["response1"].values.astype(int)
+#     response2 = x["response2"].values.astype(int)
+#     state1 = x["state1"].values.astype(int)
+#     state2 = x["state2"].values.astype(int)
+
+#     isleft1 = x["isleft1"].values.astype(int)
+#     isleft2 = x["isleft2"].values.astype(int)
+
+
+#     q = x["q_init"].iloc[0]
+#     feedback = x["feedback"].values.astype(float)
+#     split_by = x["split_by"].values.astype(int)
+
+
+#     # YJS added for two-step tasks on 2021-12-05
+#     # nstates = x["nstates"].values.astype(int)
+#     nstates = max(x["state2"].values.astype(int)) + 1
+
+
+#     return wiener_like_rlddm_2step_reg(
+#         x["rt1"].values,
+#         x["rt2"].values,
+#         state1,
+#         state2,
+#         response1,
+#         response2,
+#         feedback,
+#         split_by,
+#         q,
+#         alpha,
+#         pos_alpha, 
+#         # w, # added for two-step task
+#         gamma, # added for two-step task 
+#         lambda_, # added for two-step task 
+#         v,
+#         sv,
+#         a,
+#         z,
+#         sz,
+#         t,
+#         nstates,
+#         st,
+#         p_outlier=p_outlier,
+#         **wp
+#     )
+
+
+
+
 def wienerRL_like_2step_reg(x, v, alpha, pos_alpha, gamma, lambda_, sv, a, z, sz, t, st, p_outlier=0):
+
     wiener_params = {
         "err": 1e-4,
         "n_st": 2,
@@ -480,7 +540,7 @@ def wienerRL_like_2step_reg(x, v, alpha, pos_alpha, gamma, lambda_, sv, a, z, sz
     nstates = max(x["state2"].values.astype(int)) + 1
 
 
-    return wiener_like_rlddm_2step_reg(
+    return wiener_like_rlddm_2step(
         x["rt1"].values,
         x["rt2"].values,
         state1,
