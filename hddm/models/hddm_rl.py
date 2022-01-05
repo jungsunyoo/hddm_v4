@@ -540,7 +540,7 @@ def wienerRL_like_2step_reg(x, v, alpha, pos_alpha, gamma, lambda_, sv, a, z, sz
     nstates = max(x["state2"].values.astype(int)) + 1
 
 
-    return wiener_like_rlddm_2step(
+    return wiener_like_rlddm_2step_reg(
         x["rt1"].values,
         x["rt2"].values,
         state1,
