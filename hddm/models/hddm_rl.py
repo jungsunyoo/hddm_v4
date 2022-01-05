@@ -446,8 +446,8 @@ def wienerRL_like_2step(x, v, alpha, pos_alpha, w, gamma, lambda_, sv, a, z, sz,
         **wp
     )
 # def wienerRL_like_2step_reg(x, v, alpha, pos_alpha, w, gamma, lambda_, sv, a, z, sz, t, st, p_outlier=0):
-def wienerRL_like_2step_reg(x, v, v0, v1, v2, alpha, pos_alpha, gamma, lambda_, sv, a, z, sz, t, st, p_outlier=0):
-
+# def wienerRL_like_2step_reg(x, v, v0, v1, v2, alpha, pos_alpha, gamma, lambda_, sv, a, z, sz, t, st, p_outlier=0):
+def wienerRL_like_2step_reg(x, v, alpha, pos_alpha, gamma, lambda_, sv, a, z, sz, t, st, p_outlier=0):
     wiener_params = {
         "err": 1e-4,
         "n_st": 2,
@@ -495,9 +495,9 @@ def wienerRL_like_2step_reg(x, v, v0, v1, v2, alpha, pos_alpha, gamma, lambda_, 
         # w, # added for two-step task
         gamma, # added for two-step task 
         lambda_, # added for two-step task 
-        v0, # intercept for first stage rt regression
-        v1, # slope for mb
-        v2, # slobe for mf
+        # v0, # intercept for first stage rt regression
+        # v1, # slope for mb
+        # v2, # slobe for mf
         v, # don't use second stage for now
         sv,
         a,

@@ -291,6 +291,14 @@ def wiener_like_rlddm_2step(np.ndarray[double, ndim=1] x1, # 1st-stage RT
                 p = full_pdf(rt, (dtq * v), sv, a, z, sz, t, st, err, n_st, n_sz, use_adaptive, simps_err)
 
 
+                # 2022-01-04 meeting notes
+                # keep threshold the same across stages
+                # non decision time, drift rate might change between stages 
+                # Q) starting stage of the second stage might depend on the first stage drift rate? -> multistep DDM (Feng)
+                # see whether non-decision time changes as a function of time or common/rare transition (use the condition separtion in HDDM)
+                # Iintertrial parameters -> run with and without, but if we're using the functional form then maybe not include
+
+
 
             # update Q values, regardless of pdf    
 
@@ -339,8 +347,8 @@ def wiener_like_rlddm_2step(np.ndarray[double, ndim=1] x1, # 1st-stage RT
 # JY added on 2022-01-03 for simultaneous regression on two-step tasks
 def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT                      
                       np.ndarray[double, ndim=1] x2, # 2nd-stage RT                     
-                      np.ndarray[long, ndim=1] isleft1, # whether left response 1st-stage, 
-                      np.ndarray[long, ndim=1] isleft2, # whether left response 2nd-stage  
+                      # np.ndarray[long, ndim=1] isleft1, # whether left response 1st-stage, 
+                      # np.ndarray[long, ndim=1] isleft2, # whether left response 2nd-stage  
                       np.ndarray[long,ndim=1] s1, # 1st-stage state
                       np.ndarray[long,ndim=1] s2, # 2nd-stage state
                       np.ndarray[long, ndim=1] response1,
@@ -352,7 +360,7 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
                       # double w, 
                       double gamma, double lambda_, 
 
-                      double v0, double v1, double v2, 
+                      # double v0, double v1, double v2, 
                       double v, # don't use second stage
                       double sv, 
                       double a, 
@@ -367,7 +375,10 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
 
 
 
-
+    cdef double v0 = 0.5
+    cdef double v1 = 0.3
+    cdef double v2 = 0.1
+    # cdef ndarray[long, ndim=1] isleft1 = np.ones()
 
     cdef Py_ssize_t size = x1.shape[0]
     cdef Py_ssize_t i, j
@@ -478,9 +489,9 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
                 #     dtq = -dtq
                 #     rt = -rt
 
-                if isleft1s[i] == 0: # if chosen right
-                    rt = -rt
-                    v_ = -v_
+                # if isleft1s[i] == 0: # if chosen right
+                    # rt = -rt
+                    # v_ = -v_
 
                 # p = full_pdf(rt, (dtq * v), sv, a, z,
                 #              sz, t, st, err, n_st, n_sz, use_adaptive, simps_err)
@@ -497,10 +508,10 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
                 qs = qs_mb[s2s[i],:]
                 dtq = qs[1] - qs[0]
                 rt = x2s[i]
-                if isleft2s[i] == 0:
+                # if isleft2s[i] == 0:
                 # if qs[0] > qs[1]:
-                    dtq = -dtq
-                    rt = -rt           
+                    # dtq = -dtq
+                    # rt = -rt           
                 p = full_pdf(rt, (dtq * v), sv, a, z, sz, t, st, err, n_st, n_sz, use_adaptive, simps_err)
 
 
