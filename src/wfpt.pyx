@@ -182,7 +182,10 @@ def wiener_like_rlddm_2step(np.ndarray[double, ndim=1] x1, # 1st-stage RT
 
 
 
-    cdef double w = 0
+    # cdef double w = 0
+    cdef double v0 = 0.3
+    cdef double v1 = 0.4
+    cdef double v2 = 0.4
 
     cdef Py_ssize_t size = x1.shape[0]
     cdef Py_ssize_t i, j
@@ -218,6 +221,10 @@ def wiener_like_rlddm_2step(np.ndarray[double, ndim=1] x1, # 1st-stage RT
     # Added by Jungsun Yoo on 2021-11-27 for two-step tasks
     # parameters added for two-step
 
+    # for reg
+    cdef double v_
+    cdef double dtq_mb
+    cdef double dtq_mf
 
     cdef np.ndarray[long, ndim=1] planets
     cdef np.ndarray[double, ndim=1] counter = np.zeros(comb(nstates,2,exact=True))
@@ -278,7 +285,10 @@ def wiener_like_rlddm_2step(np.ndarray[double, ndim=1] x1, # 1st-stage RT
                 # 1st stage
                 planets = state_combinations[s1s[i]]
                 Qmb = np.dot(Tm, [np.max(qs_mb[planets[0],:]), np.max(qs_mb[planets[1],:])])
-                qs = w * Qmb + (1-w) * qs_mf[s1s[i],:] # Update for 1st trial 
+                # qs = w * Qmb + (1-w) * qs_mf[s1s[i],:] # Update for 1st trial 
+                dtq_mb = Qmb[0] - Qmb[1]
+                dtq_mf = qs_mf[0] - qs_mf[1]
+                v_ = v0 + (dtq_mb * v1) + (dtq_mf * v2) 
 
                 dtq = qs[1] - qs[0]
                 rt = x1s[i]
@@ -287,7 +297,7 @@ def wiener_like_rlddm_2step(np.ndarray[double, ndim=1] x1, # 1st-stage RT
                     dtq = -dtq
                     rt = -rt
 
-                p = full_pdf(rt, (dtq * v), sv, a, z,
+                p = full_pdf(rt, v_, sv, a, z,
                              sz, t, st, err, n_st, n_sz, use_adaptive, simps_err)
                 # If one probability = 0, the log sum will be -Inf
                 p = p * (1 - p_outlier) + wp_outlier
