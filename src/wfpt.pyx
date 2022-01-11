@@ -361,10 +361,12 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
                       double gamma, double lambda_, 
 
                       double v0, double v1, double v2, 
-                      double v, # don't use second stage
+                      # double v, # don't use second stage
                       double sv, 
-                      double a, 
-                      double z, double sz, double t,
+                      # double a, 
+                      double z0, double z1, double z2,
+                      # double z, 
+                      double sz, double t,
                       int nstates,
                       double st, 
 
@@ -374,7 +376,7 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
 
 
 
-
+    cdef double a=1
 
 
     cdef Py_ssize_t size = x1.shape[0]
@@ -391,6 +393,8 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
     cdef np.ndarray[double, ndim=2] qs_mb = np.ones((nstates, 2))*q # second-stage Q-values
 
 
+
+
     cdef double dtQ1
     cdef double dtQ2
 
@@ -400,6 +404,8 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
     cdef long s_
     cdef long a_ 
     cdef double v_
+    cdef double z_
+    cdef double sig
 
     cdef np.ndarray[double, ndim=1] x1s
     cdef np.ndarray[double, ndim=1] x2s
@@ -481,6 +487,8 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
                 dtq_mb = Qmb[0] - Qmb[1]
                 dtq_mf = qs_mf[s1s[i],0] - qs_mf[s1s[i],1]
                 v_ = v0 + (dtq_mb * v1) + (dtq_mf * v2) 
+                z_ = z0 + (dtq_mb * z1) + (dtq_mf * z2)
+                sig =  np.where(z_<0, np.exp(z_)/(1+np.exp(z_)), 1/(1+np.exp(-z))) # perform sigmoid on z to bound it [0,1]
                 rt = x1s[i]
                 # if qs[0] > qs[1]:
                 #     dtq = -dtq
@@ -492,7 +500,7 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
 
                 # p = full_pdf(rt, (dtq * v), sv, a, z,
                 #              sz, t, st, err, n_st, n_sz, use_adaptive, simps_err)
-                p = full_pdf(rt, v_, sv, a, z,
+                p = full_pdf(rt, v_, sv, 1, sig,
                              sz, t, st, err, n_st, n_sz, use_adaptive, simps_err)                
                 # If one probability = 0, the log sum will be -Inf
                 p = p * (1 - p_outlier) + wp_outlier
@@ -501,15 +509,15 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
                 sum_logp += log(p)
 
 
-                # # 2nd stage
-                qs = qs_mb[s2s[i],:]
-                dtq = qs[1] - qs[0]
-                rt = x2s[i]
-                if isleft2s[i] == 0:
-                # if qs[0] > qs[1]:
-                    dtq = -dtq
-                    rt = -rt           
-                p = full_pdf(rt, (dtq * v), sv, a, z, sz, t, st, err, n_st, n_sz, use_adaptive, simps_err)
+                # # # 2nd stage
+                # qs = qs_mb[s2s[i],:]
+                # dtq = qs[1] - qs[0]
+                # rt = x2s[i]
+                # if isleft2s[i] == 0:
+                # # if qs[0] > qs[1]:
+                #     dtq = -dtq
+                #     rt = -rt           
+                # p = full_pdf(rt, (dtq * v), sv, a, z, sz, t, st, err, n_st, n_sz, use_adaptive, simps_err)
 
 
 
