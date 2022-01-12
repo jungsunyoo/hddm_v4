@@ -44,9 +44,9 @@ class HDDMrl(HDDM):
         self.v2 = kwargs.pop("v2", True) # added for Qmb vs Qmf regression
 
 
-        self.z0 = kwargs.pop("z0", True)
-        self.z1 = kwargs.pop("z1", True)
-        self.z2 = kwargs.pop("z2", True)
+        # self.z0 = kwargs.pop("z0", True)
+        # self.z1 = kwargs.pop("z1", True)
+        # self.z2 = kwargs.pop("z2", True)
 
 
         self.wfpt_rl_class = WienerRL
@@ -177,49 +177,49 @@ class HDDMrl(HDDM):
                     )
             )
 
-            if self.z0:
-                knodes.update(
-                    self._create_family_normal_non_centered(
-                        "v0",
-                        value=0,
-                        g_tau=50 ** -2, 
-                        # std_std=10,
-                        # g_mu=0.2,
-                        # g_tau=3 ** -2,
-                        std_lower=1e-10,
-                        std_upper=10,
-                        std_value=0.1,
-                    )
-                )
+            # if self.z0:
+            #     knodes.update(
+            #         self._create_family_normal_non_centered(
+            #             "v0",
+            #             value=0,
+            #             g_tau=50 ** -2, 
+            #             # std_std=10,
+            #             # g_mu=0.2,
+            #             # g_tau=3 ** -2,
+            #             std_lower=1e-10,
+            #             std_upper=10,
+            #             std_value=0.1,
+            #         )
+            #     )
 
-            if self.z1:
-                knodes.update(
-                    self._create_family_normal_non_centered(
-                        "v1",
-                        value=0,
-                        g_tau=50 ** -2, 
-                        # std_std=10,
-                        # g_mu=0.2,
-                        # g_tau=3 ** -2,
-                        std_lower=1e-10,
-                        std_upper=10,
-                        std_value=0.1,
-                    )
-            )
-            if self.z2:
-                knodes.update(
-                    self._create_family_normal_non_centered(
-                        "v2",
-                        value=0,
-                        g_tau=50 ** -2, 
-                        # std_std=10,
-                        # g_mu=0.2,
-                        # g_tau=3 ** -2,
-                        std_lower=1e-10,
-                        std_upper=10,
-                        std_value=0.1,
-                    )
-            )
+            # if self.z1:
+            #     knodes.update(
+            #         self._create_family_normal_non_centered(
+            #             "v1",
+            #             value=0,
+            #             g_tau=50 ** -2, 
+            #             # std_std=10,
+            #             # g_mu=0.2,
+            #             # g_tau=3 ** -2,
+            #             std_lower=1e-10,
+            #             std_upper=10,
+            #             std_value=0.1,
+            #         )
+            # )
+            # if self.z2:
+            #     knodes.update(
+            #         self._create_family_normal_non_centered(
+            #             "v2",
+            #             value=0,
+            #             g_tau=50 ** -2, 
+            #             # std_std=10,
+            #             # g_mu=0.2,
+            #             # g_tau=3 ** -2,
+            #             std_lower=1e-10,
+            #             std_upper=10,
+            #             std_value=0.1,
+            #         )
+            # )
 
 
         else:
@@ -338,48 +338,43 @@ class HDDMrl(HDDM):
             )
             # )
 
-            if self.z0:
-                knodes.update(
-                    self._create_family_normal(
-                        "z0",
-                        value=0,
-                        g_mu=0.2,
-                        g_tau=3 ** -2,
-                        std_lower=1e-10,
-                        std_upper=10,
-                        std_value=0.1,
-                    )
-                )
+            # if self.z0:
+            #     knodes.update(
+            #         self._create_family_normal(
+            #             "z0",
+            #             value=0,
+            #             g_mu=0.2,
+            #             g_tau=3 ** -2,
+            #             std_lower=1e-10,
+            #             std_upper=10,
+            #             std_value=0.1,
+            #         )
+            #     )
 
-            if self.z1:
-                knodes.update(
-                    self._create_family_normal(
-                        "z1",
-                        value=0,
-                        g_mu=0.2,
-                        g_tau=3 ** -2,
-                        std_lower=1e-10,
-                        std_upper=10,
-                        std_value=0.1,
-                    )
-                )
-            if self.z2:
-                knodes.update(
-                    self._create_family_normal(
-                        "z2",
-                        value=0,
-                        g_mu=0.2,
-                        g_tau=3 ** -2,
-                        std_lower=1e-10,
-                        std_upper=10,
-                        std_value=0.1,
-                    )
-
-
-
-
-
-            )
+            # if self.z1:
+            #     knodes.update(
+            #         self._create_family_normal(
+            #             "z1",
+            #             value=0,
+            #             g_mu=0.2,
+            #             g_tau=3 ** -2,
+            #             std_lower=1e-10,
+            #             std_upper=10,
+            #             std_value=0.1,
+            #         )
+            #     )
+            # if self.z2:
+            #     knodes.update(
+            #         self._create_family_normal(
+            #             "z2",
+            #             value=0,
+            #             g_mu=0.2,
+            #             g_tau=3 ** -2,
+            #             std_lower=1e-10,
+            #             std_upper=10,
+            #             std_value=0.1,
+            #         )
+            # )
 # )
         return knodes
 
@@ -398,9 +393,9 @@ class HDDMrl(HDDM):
         wfpt_parents["v1"] = knodes["v1_bottom"]
         wfpt_parents["v2"] = knodes["v2_bottom"]
 
-        wfpt_parents["z0"] = knodes["z0_bottom"]
-        wfpt_parents["z1"] = knodes["z1_bottom"]
-        wfpt_parents["z2"] = knodes["z2_bottom"]
+        # wfpt_parents["z0"] = knodes["z0_bottom"]
+        # wfpt_parents["z1"] = knodes["z1_bottom"]
+        # wfpt_parents["z2"] = knodes["z2_bottom"]
 
         
         # wfpt_parents["v"] = knodes["v_bottom"]
