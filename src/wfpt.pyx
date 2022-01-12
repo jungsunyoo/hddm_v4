@@ -369,7 +369,7 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
                       # double sz, 
                       double t,
                       int nstates,
-                      double st, 
+                      # double st, 
 
                       double err, int n_st=10, int n_sz=10, bint use_adaptive=1, double simps_err=1e-8,
                       double p_outlier=0, double w_outlier=0,
@@ -379,7 +379,7 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
 
     cdef double a = 1
     cdef double sz = 0
-    # cdef double st = 0
+    cdef double st = 0
     cdef double sv = 0
 
 
