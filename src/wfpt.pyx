@@ -488,7 +488,7 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
                 dtq_mf = qs_mf[s1s[i],0] - qs_mf[s1s[i],1]
                 v_ = v0 + (dtq_mb * v1) + (dtq_mf * v2) 
                 z_ = z0 + (dtq_mb * z1) + (dtq_mf * z2)
-                sig =  np.where(z_<0, np.exp(z_)/(1+np.exp(z_)), 1/(1+np.exp(-z))) # perform sigmoid on z to bound it [0,1]
+                sig =  np.where(z_<0, np.exp(z_)/(1+np.exp(z_)), 1/(1+np.exp(-z_))) # perform sigmoid on z to bound it [0,1]
                 rt = x1s[i]
                 # if qs[0] > qs[1]:
                 #     dtq = -dtq
