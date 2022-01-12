@@ -333,62 +333,38 @@ class HDDMrl(HDDM):
                     #     std_upper=10,
                     #     std_value=0.1,
                     # )
-                    self._create_family_normal(
-                        "pos_alpha",
-                        value=0,
-                        g_mu=0.2,
-                        g_tau=3 ** -2,
-                        std_lower=1e-10,
-                        std_upper=10,
-                        std_value=0.1,
-                    )                    
+                    self._create_family_normal_normal_hnormal(
+                        "v0", value=2, g_mu=2, g_tau=3 ** -2, std_std=2
+                )
                 )
 
             if self.v1:
                 knodes.update(
-                    # self._create_family_normal(
-                    #     "v1",
-                    #     value=0,
-                    #     g_tau=50 ** -2, 
-                    #     # std_std=10,
-                    #     # g_mu=0.2,
-                    #     # g_tau=3 ** -2,
-                    #     std_lower=1e-10,
-                    #     std_upper=10,
-                    #     std_value=0.1,
-                    # )
                     self._create_family_normal(
-                        "pos_alpha",
+                        "v1",
                         value=0,
-                        g_mu=0.2,
-                        g_tau=3 ** -2,
+                        g_tau=50 ** -2, 
+                        # std_std=10,
+                        # g_mu=0.2,
+                        # g_tau=3 ** -2,
                         std_lower=1e-10,
                         std_upper=10,
                         std_value=0.1,
-                    )                    
+                    )
             )
             if self.v2:
                 knodes.update(
-                    # self._create_family_normal(
-                    #     "v2",
-                    #     value=0,
-                    #     g_tau=50 ** -2, 
-                    #     # std_std=10,
-                    #     # g_mu=0.2,
-                    #     # g_tau=3 ** -2,
-                    #     std_lower=1e-10,
-                    #     std_upper=10,
-                    #     std_value=0.1,
-                    # )
                     self._create_family_normal(
-                        "pos_alpha",
+                        "v2",
                         value=0,
-                        g_mu=0.2,
-                        g_tau=3 ** -2,
+                        g_tau=50 ** -2, 
+                        # std_std=10,
+                        # g_mu=0.2,
+                        # g_tau=3 ** -2,
                         std_lower=1e-10,
                         std_upper=10,
                         std_value=0.1,
-                    )                    
+                    )
             )
             # )
 
