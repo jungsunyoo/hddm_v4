@@ -10,6 +10,7 @@ from kabuki.hierarchical import Knode
 from kabuki.utils import stochastic_from_dist
 from hddm.models import HDDM
 from wfpt import wiener_like_rlddm, wiener_like_rlddm_2step, wiener_like_rlddm_2step_reg
+from collections import OrderedDict
 
 
 class HDDMrl(HDDM):
