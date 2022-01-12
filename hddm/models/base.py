@@ -1238,10 +1238,13 @@ class HDDMBase(AccumulatorModel):
                 if "p_outlier" in self.include
                 else self.p_outlier
             )
-
-            wfpt_parents["a"] = knodes["a_bottom"]
-            wfpt_parents["v"] = knodes["v_bottom"]
-            wfpt_parents["t"] = knodes["t_bottom"]
+            # JY modified on 2022-01-11 for 2step regression 
+            if "a" in self.include:
+                wfpt_parents["a"] = knodes["a_bottom"]
+            if "v" in self.include:
+                wfpt_parents["v"] = knodes["v_bottom"]
+            if "t" in self.include: 
+                wfpt_parents["t"] = knodes["t_bottom"]
 
             wfpt_parents["sv"] = (
                 knodes["sv_bottom"]
