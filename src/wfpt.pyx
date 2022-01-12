@@ -32,6 +32,12 @@ from cython.parallel import *
 # include "pdf.pxi"
 include 'integrate.pxi'
 
+
+
+np.warnings.filterwarnings('ignore', '(overflow|invalid)')
+
+
+
 def pdf_array(np.ndarray[double, ndim=1] x, double v, double sv, double a, double z, double sz,
               double t, double st, double err=1e-4, bint logp=0, int n_st=2, int n_sz=2, bint use_adaptive=1,
               double simps_err=1e-3, double p_outlier=0, double w_outlier=0):
@@ -493,7 +499,8 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
                 dtq_mf = qs_mf[s1s[i],0] - qs_mf[s1s[i],1]
                 v_ = v0 + (dtq_mb * v1) + (dtq_mf * v2) 
                 z_ = z0 + (dtq_mb * z1) + (dtq_mf * z2)
-                sig =  np.where(z_<0, np.exp(z_)/(1+np.exp(z_)), 1/(1+np.exp(-z_))) # perform sigmoid on z to bound it [0,1]
+                # sig =  np.where(z_<0, np.exp(z_)/(1+np.exp(z_)), 1/(1+np.exp(-z_))) # perform sigmoid on z to bound it [0,1]
+                sig = 1/(1+np.exp(-z_))
                 rt = x1s[i]
                 # if qs[0] > qs[1]:
                 #     dtq = -dtq
