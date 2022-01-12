@@ -403,11 +403,11 @@ class HDDMrl(HDDM):
         wfpt_parents["z2"] = knodes["z2_bottom"]
 
         
-        wfpt_parents["v"] = knodes["v_bottom"]
+        # wfpt_parents["v"] = knodes["v_bottom"]
         wfpt_parents["t"] = knodes["t_bottom"]
         wfpt_parents["alpha"] = knodes["alpha_bottom"]
         wfpt_parents["pos_alpha"] = knodes["pos_alpha_bottom"] if self.dual else 100.00
-        wfpt_parents["z"] = knodes["z_bottom"] if "z" in self.include else 0.5
+        # wfpt_parents["z"] = knodes["z_bottom"] if "z" in self.include else 0.5
 
         return wfpt_parents
 
