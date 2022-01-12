@@ -1253,11 +1253,11 @@ class HDDMBase(AccumulatorModel):
             #     if "sz" in self.include
             #     else self.default_intervars["sz"]
             # )
-            wfpt_parents["st"] = (
-                knodes["st_bottom"]
-                if "st" in self.include
-                else self.default_intervars["st"]
-            )
+            # wfpt_parents["st"] = (
+            #     knodes["st_bottom"]
+            #     if "st" in self.include
+            #     else self.default_intervars["st"]
+            # )
             wfpt_parents["z"] = knodes["z_bottom"] if "z" in self.include else 0.5
         return wfpt_parents
 
