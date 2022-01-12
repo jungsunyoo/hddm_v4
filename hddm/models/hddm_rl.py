@@ -407,7 +407,7 @@ class HDDMrl(HDDM):
         wfpt_parents["t"] = knodes["t_bottom"]
         wfpt_parents["alpha"] = knodes["alpha_bottom"]
         wfpt_parents["pos_alpha"] = knodes["pos_alpha_bottom"] if self.dual else 100.00
-        # wfpt_parents["z"] = knodes["z_bottom"] if "z" in self.include else 0.5
+        wfpt_parents["z"] = knodes["z_bottom"] if "z" in self.include else 0.5
 
         return wfpt_parents
 
@@ -516,7 +516,7 @@ def wienerRL_like_2step(x, v, alpha, pos_alpha, w, gamma, lambda_, sv, a, z, sz,
     )
 # def wienerRL_like_2step_reg(x, v, alpha, pos_alpha, w, gamma, lambda_, sv, a, z, sz, t, st, p_outlier=0):
 # def wienerRL_like_2step_reg(x, v, v0, v1, v2, alpha, pos_alpha, gamma, lambda_, sv, a, z, sz, t, st, p_outlier=0): # regression ver1: without bounds
-def wienerRL_like_2step_reg(x, v0, v1, v2, z0, z1, z2, alpha, pos_alpha, gamma, lambda_, t, p_outlier=0): # regression ver2: bounded, a fixed to 1
+def wienerRL_like_2step_reg(x, v0, v1, v2, alpha, pos_alpha, gamma, lambda_, z, t, p_outlier=0): # regression ver2: bounded, a fixed to 1
 
     wiener_params = {
         "err": 1e-4,
@@ -571,10 +571,10 @@ def wienerRL_like_2step_reg(x, v0, v1, v2, z0, z1, z2, alpha, pos_alpha, gamma, 
         # v, # don't use second stage for now
         # sv,
         # a,
-        z0, # bias: added for intercept regression 1st stage
-        z1, # bias: added for slope regression mb 1st stage
-        z2, # bias: added for slope regression mf 1st stage
-        # z,
+        # z0, # bias: added for intercept regression 1st stage
+        # z1, # bias: added for slope regression mb 1st stage
+        # z2, # bias: added for slope regression mf 1st stage
+        z,
         # sz,
         t,
         nstates,
