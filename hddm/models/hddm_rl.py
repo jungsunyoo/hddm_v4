@@ -410,7 +410,7 @@ class HDDMrl(HDDM):
 
     def _create_wfpt_parents_dict(self, knodes):
         wfpt_parents = OrderedDict()
-        # wfpt_parents = super(HDDMrl, self)._create_wfpt_parents_dict(knodes)
+        wfpt_parents = super(HDDMrl, self)._create_wfpt_parents_dict(knodes)
         # wfpt_parents["alpha"] = knodes["alpha_bottom"]
         # wfpt_parents["pos_alpha"] = knodes["pos_alpha_bottom"] if self.dual else 100.00
 
@@ -429,7 +429,7 @@ class HDDMrl(HDDM):
 
         
         # wfpt_parents["v"] = knodes["v_bottom"]
-        wfpt_parents["t"] = knodes["t_bottom"]
+        # wfpt_parents["t"] = knodes["t_bottom"]
         wfpt_parents["alpha"] = knodes["alpha_bottom"]
         wfpt_parents["pos_alpha"] = knodes["pos_alpha_bottom"] if self.dual else 100.00
         wfpt_parents["z"] = knodes["z_bottom"] if "z" in self.include else 0.5
