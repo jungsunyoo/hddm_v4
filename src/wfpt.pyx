@@ -377,7 +377,10 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
 
 
 
-    cdef double a=1
+    cdef double a = 1
+    cdef double sz = 0
+    # cdef double st = 0
+    cdef double sv = 0
 
 
     cdef Py_ssize_t size = x1.shape[0]
@@ -407,6 +410,7 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
     cdef double v_
     cdef double z_
     cdef double sig
+
 
     cdef np.ndarray[double, ndim=1] x1s
     cdef np.ndarray[double, ndim=1] x2s
