@@ -362,11 +362,12 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
 
                       double v0, double v1, double v2, 
                       # double v, # don't use second stage
-                      double sv, 
+                      # double sv, 
                       # double a, 
                       double z0, double z1, double z2,
                       # double z, 
-                      double sz, double t,
+                      # double sz, 
+                      double t,
                       int nstates,
                       double st, 
 

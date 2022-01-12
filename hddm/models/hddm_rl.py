@@ -516,7 +516,7 @@ def wienerRL_like_2step(x, v, alpha, pos_alpha, w, gamma, lambda_, sv, a, z, sz,
     )
 # def wienerRL_like_2step_reg(x, v, alpha, pos_alpha, w, gamma, lambda_, sv, a, z, sz, t, st, p_outlier=0):
 # def wienerRL_like_2step_reg(x, v, v0, v1, v2, alpha, pos_alpha, gamma, lambda_, sv, a, z, sz, t, st, p_outlier=0): # regression ver1: without bounds
-def wienerRL_like_2step_reg(x, v0, v1, v2, z0, z1, z2, alpha, pos_alpha, gamma, lambda_, sv, sz, t, st, p_outlier=0): # regression ver2: bounded, a fixed to 1
+def wienerRL_like_2step_reg(x, v0, v1, v2, z0, z1, z2, alpha, pos_alpha, gamma, lambda_, t, st, p_outlier=0): # regression ver2: bounded, a fixed to 1
 
     wiener_params = {
         "err": 1e-4,
@@ -569,13 +569,13 @@ def wienerRL_like_2step_reg(x, v0, v1, v2, z0, z1, z2, alpha, pos_alpha, gamma, 
         v1, # slope for mb
         v2, # slobe for mf
         # v, # don't use second stage for now
-        sv,
+        # sv,
         # a,
         z0, # bias: added for intercept regression 1st stage
         z1, # bias: added for slope regression mb 1st stage
         z2, # bias: added for slope regression mf 1st stage
         # z,
-        sz,
+        # sz,
         t,
         nstates,
         st,
