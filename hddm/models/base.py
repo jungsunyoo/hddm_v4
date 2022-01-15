@@ -1258,7 +1258,7 @@ class HDDMBase(AccumulatorModel):
             #     if "st" in self.include
             #     else self.default_intervars["st"]
             # )
-            wfpt_parents["z"] = knodes["z_bottom"] if "z" in self.include else 0.5
+            # wfpt_parents["z"] = knodes["z_bottom"] if "z" in self.include else 0.5
         return wfpt_parents
 
     def _create_wfpt_knode(self, knodes):
