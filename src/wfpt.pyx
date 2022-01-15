@@ -370,8 +370,8 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
                       # double v, # don't use second stage
                       # double sv, 
                       # double a, 
-                      # double z0, double z1, double z2,
-                      double z, 
+                      double z0, double z1, double z2,
+                      # double z, 
                       # double sz, 
                       double t,
                       int nstates,
@@ -398,6 +398,10 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
     cdef double wp_outlier = w_outlier * p_outlier
     cdef double alfa
     cdef double pos_alfa
+
+    cdef double gamma_
+    cdef double lambda__
+
     # cdef np.ndarray[double, ndim=1] qs = np.array([q, q])
     cdef np.ndarray[double, ndim=2] qs_mf = np.ones((comb(nstates,2,exact=True),2))*q # first-stage MF Q-values
     cdef np.ndarray[double, ndim=2] qs_mb = np.ones((nstates, 2))*q # second-stage Q-values
@@ -498,9 +502,9 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
                 dtq_mb = Qmb[0] - Qmb[1]
                 dtq_mf = qs_mf[s1s[i],0] - qs_mf[s1s[i],1]
                 v_ = v0 + (dtq_mb * v1) + (dtq_mf * v2) 
-                # z_ = z0 + (dtq_mb * z1) + (dtq_mf * z2)
+                z_ = z0 + (dtq_mb * z1) + (dtq_mf * z2)
                 # sig =  np.where(z_<0, np.exp(z_)/(1+np.exp(z_)), 1/(1+np.exp(-z_))) # perform sigmoid on z to bound it [0,1]
-                # sig = 1/(1+np.exp(-z_))
+                sig = 1/(1+np.exp(-z_))
                 rt = x1s[i]
                 # if qs[0] > qs[1]:
                 #     dtq = -dtq
@@ -512,7 +516,7 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
 
                 # p = full_pdf(rt, (dtq * v), sv, a, z,
                 #              sz, t, st, err, n_st, n_sz, use_adaptive, simps_err)
-                p = full_pdf(rt, v_, sv, 1, z,
+                p = full_pdf(rt, v_, sv, 1, sig,
                              sz, t, st, err, n_st, n_sz, use_adaptive, simps_err)                
                 # If one probability = 0, the log sum will be -Inf
                 p = p * (1 - p_outlier) + wp_outlier
@@ -543,6 +547,8 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
             #     alfa = (2.718281828459**pos_alfa) / (1 + 2.718281828459**pos_alfa)
             # else:
             alfa = (2.718281828459**alpha) / (1 + 2.718281828459**alpha)
+            gamma_ = (2.718281828459**gamma) / (1 + 2.718281828459**gamma)
+            lambda__ = (2.718281828459**lambda_) / (1 + 2.718281828459**lambda_)
 
             # qs[1] is upper bound, qs[0] is lower bound. feedbacks is reward
             # received on current trial.
@@ -555,7 +561,7 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
 
             dtQ2 = feedbacks[i] - qs_mb[s2s[i],responses2[i]] # delta stage 2 
             qs_mb[s2s[i], responses2[i]] = qs_mb[s2s[i],responses2[i]] + alfa * dtQ2 # delta update for qmb
-            qs_mf[s1s[i], responses1[i]] = qs_mf[s1s[i], responses1[i]] + lambda_ * dtQ2 # eligibility trace        
+            qs_mf[s1s[i], responses1[i]] = qs_mf[s1s[i], responses1[i]] + lambda__ * dtQ2 # eligibility trace        
 
 
             # memory decay for unexperienced options in this trial
@@ -564,12 +570,12 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
                 for a_ in range(2):
                     if (s_ is not s2s[i]) or (a_ is not responses2[i]):
                         # qs_mb[s_, a_] = qs_mb[s_, a_] * (1-gamma)
-                        qs_mb[s_,a_] *= (1-gamma)
+                        qs_mb[s_,a_] *= (1-gamma_)
 
             for s_ in range(comb(nstates,2,exact=True)):
                 for a_ in range(2):
                     if (s_ is not s1s[i]) or (a_ is not responses1[i]):
-                        qs_mf[s_,a_] *= (1-gamma)
+                        qs_mf[s_,a_] *= (1-gamma_)
            
             counter[s1s[i]] += 1
 
