@@ -46,6 +46,7 @@ class HDDMrl(HDDM):
         self.gamma = kwargs.pop("gamma", True) # added for two-step task
         
         self.mfactor = kwargs['mfactor']
+        print(self.mfactor)
         # mfactors = kwargs['mfactor']
         if 'lambda_' in self.mfactor:
             self.lambda_ = kwargs.pop("lambda_", True) # added for two-step task
