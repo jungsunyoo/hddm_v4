@@ -590,7 +590,16 @@ def wienerRL_like_2step_factorial(x, **kwargs): # regression ver2: bounded, a fi
         "w_outlier": 0.1,
     }
     wp = wiener_params
+    # if not kwargs:
     free_params=kwargs
+    # else:
+    #     {'lambda_' = 0,
+    #     'v' = 0,
+    #     'z' = 0,
+    #     'v0' = 0,
+    #     'v1' = 0, 
+    #     'v2' = 0,
+    #     }
 
     # free_params = {}
     # if kwargs['v0']:
@@ -637,7 +646,6 @@ def wienerRL_like_2step_factorial(x, **kwargs): # regression ver2: bounded, a fi
         q,
         alpha,
         pos_alpha, 
-        # w, # added for two-step task
         gamma, # added for two-step task 
         # lambda_, # added for two-step task 
         # v0, # intercept for first stage rt regression
