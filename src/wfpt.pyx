@@ -621,9 +621,12 @@ def wiener_like_rlddm_2step_factorial(np.ndarray[double, ndim=1] x1, # 1st-stage
 
 
     if 'a' in free_params.keys():
-        cdef double a = 1
+        # cdef double a = 1
+        a: double free_params['a']
+
     else:
-        cdef double a
+        # cdef double a
+        a: double = 1
     # cdef double a if 'a' in free_params.keys() else cdef double a=1
     # cdef double v0 if 'v0' in free_params.keys()
     # cdef double v1 if 'v1' in free_params.keys()
