@@ -52,7 +52,7 @@ class HDDMrl(HDDM):
         else:
             self.lambda_ = False
         # if 'v' not in kwargs['mfactor']:
-        if 'v' not in self.mfactor:
+        if 'v3' not in self.mfactor:
             self.v = False
             self.v0 = kwargs.pop("v0", True) # added for Qmb vs Qmf regression
             if 'v1' in self.mfactor:
@@ -65,7 +65,7 @@ class HDDMrl(HDDM):
             self.v2 = False
 
 
-        if 'z' not in self.mfactor:
+        if 'z3' not in self.mfactor:
             self.z = False
             self.z0 = kwargs.pop("z0", True) # added for Qmb vs Qmf regression
             if 'z1' in self.mfactor:
