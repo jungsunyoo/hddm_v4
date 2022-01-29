@@ -1112,7 +1112,7 @@ class HDDMBase(AccumulatorModel):
 
         self._kwargs = kwargs
         # print(kwargs)
-        # print(include)
+        print(include)
         # Check if self has model attribute
         if not hasattr(self, "model"):
             print("No model attribute --> setting up standard HDDM")
@@ -1244,13 +1244,13 @@ class HDDMBase(AccumulatorModel):
             )
         # JY modified on 2022-01-11 for 2step regression
         # JY modified on 2022-01-28 for factorial model specification
-            if 'a' in self.mfactor:
-                wfpt_parents["a"] = knodes["a_bottom"]
+
             if 'v' in self.mfactor:
                 wfpt_parents["v"] = knodes["v_bottom"]
             if 'z' in self.mfactor:
                 wfpt_parents["z"] = knodes["z_bottom"] if "z" in self.include else 0.5
-
+            if 'a' in self.mfactor:
+                wfpt_parents["a"] = knodes["a_bottom"]
             wfpt_parents["t"] = knodes["t_bottom"]
 
             # wfpt_parents["sv"] = (
