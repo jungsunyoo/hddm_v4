@@ -1104,7 +1104,7 @@ class HDDMBase(AccumulatorModel):
 
 
         # self.mfactor = kwargs['mfactor'] 
-        self.mfactor = mfactor['freeparams']
+        self.mfactor = mfactor
 
         self.default_intervars = kwargs.pop(
             "default_intervars", {"sz": 0, "st": 0, "sv": 0}
