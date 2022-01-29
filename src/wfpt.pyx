@@ -371,8 +371,8 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
                       # double v, # don't use second stage
                       # double sv, 
                       # double a, 
-                      double z0, double z1, double z2,
-                      # double z, 
+                      # double z0, double z1, double z2,
+                      double z, 
                       # double sz, 
                       double t,
                       int nstates,
@@ -504,9 +504,10 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
                 dtq_mb = Qmb[0] - Qmb[1]
                 dtq_mf = qs_mf[s1s[i],0] - qs_mf[s1s[i],1]
                 v_ = v0 + (dtq_mb * v1) + (dtq_mf * v2) 
-                z_ = z0 + (dtq_mb * z1) + (dtq_mf * z2)
+                # z_ = z0 + (dtq_mb * z1) + (dtq_mf * z2)
                 # sig =  np.where(z_<0, np.exp(z_)/(1+np.exp(z_)), 1/(1+np.exp(-z_))) # perform sigmoid on z to bound it [0,1]
-                sig = 1/(1+np.exp(-z_))
+                # sig = 1/(1+np.exp(-z_))
+                sig = z
                 rt = x1s[i]
                 # if qs[0] > qs[1]:
                 #     dtq = -dtq
