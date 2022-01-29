@@ -1099,12 +1099,8 @@ class HDDMBase(AccumulatorModel):
     """HDDM base class. Not intended to be used directly. Instead, use hddm.HDDM."""
 
     def __init__(
-        self, data, bias=False, include=(), wiener_params=None, p_outlier=0.05, mfactor=(), **kwargs
+        self, data, bias=False, include=(), wiener_params=None, p_outlier=0.05, **kwargs
     ):
-
-
-        # self.mfactor = kwargs['mfactor'] 
-        self.mfactor = mfactor
 
         self.default_intervars = kwargs.pop(
             "default_intervars", {"sz": 0, "st": 0, "sv": 0}
@@ -1112,7 +1108,7 @@ class HDDMBase(AccumulatorModel):
 
         self._kwargs = kwargs
         # print(kwargs)
-        print(include)
+        # print(include)
         # Check if self has model attribute
         if not hasattr(self, "model"):
             print("No model attribute --> setting up standard HDDM")
@@ -1243,16 +1239,10 @@ class HDDMBase(AccumulatorModel):
                 else self.p_outlier
             )
         # JY modified on 2022-01-11 for 2step regression
-        # JY modified on 2022-01-28 for factorial model specification
-
-
+            # wfpt_parents["a"] = knodes["a_bottom"]
+            # wfpt_parents["v"] = knodes["v_bottom"]
             wfpt_parents["t"] = knodes["t_bottom"]
-            if 'v3' in self.mfactor:
-                wfpt_parents["v"] = knodes["v_bottom"]
-            if 'z3' in self.mfactor:
-                wfpt_parents["z"] = knodes["z_bottom"] if "z" in self.include else 0.5
-            if 'a3' in self.mfactor:
-                wfpt_parents["a"] = knodes["a_bottom"]
+
             # wfpt_parents["sv"] = (
             #     knodes["sv_bottom"]
             #     if "sv" in self.include
@@ -1268,7 +1258,7 @@ class HDDMBase(AccumulatorModel):
             #     if "st" in self.include
             #     else self.default_intervars["st"]
             # )
-            
+            # wfpt_parents["z"] = knodes["z_bottom"] if "z" in self.include else 0.5
         return wfpt_parents
 
     def _create_wfpt_knode(self, knodes):
