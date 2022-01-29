@@ -1245,14 +1245,14 @@ class HDDMBase(AccumulatorModel):
         # JY modified on 2022-01-11 for 2step regression
         # JY modified on 2022-01-28 for factorial model specification
 
+
+            wfpt_parents["t"] = knodes["t_bottom"]
             if 'v' in self.mfactor:
                 wfpt_parents["v"] = knodes["v_bottom"]
             if 'z' in self.mfactor:
                 wfpt_parents["z"] = knodes["z_bottom"] if "z" in self.include else 0.5
             if 'a' in self.mfactor:
                 wfpt_parents["a"] = knodes["a_bottom"]
-            wfpt_parents["t"] = knodes["t_bottom"]
-
             # wfpt_parents["sv"] = (
             #     knodes["sv_bottom"]
             #     if "sv" in self.include
