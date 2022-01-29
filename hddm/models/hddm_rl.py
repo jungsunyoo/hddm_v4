@@ -59,6 +59,10 @@ class HDDMrl(HDDM):
                 self.v1 = kwargs.pop("v1", True) # added for Qmb vs Qmf regression
             if 'v2' in self.mfactor:
                 self.v2 = kwargs.pop("v2", True) # added for Qmb vs Qmf regression
+        else: # if just using single v as free parameter
+            self.v0 = False
+            self.v1 = False
+            self.v2 = False
 
 
         if 'z' not in self.mfactor:
@@ -68,6 +72,10 @@ class HDDMrl(HDDM):
                 self.z1 = kwargs.pop("z1", True) # added for Qmb vs Qmf regression
             if 'z2' in self.mfactor:
                 self.z2 = kwargs.pop("z2", True) # added for Qmb vs Qmf regression
+        else:
+            self.z0 = False
+            self.z1 = False
+            self.z2 = False
 
 
         self.wfpt_rl_class = WienerRL
