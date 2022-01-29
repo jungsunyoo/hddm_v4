@@ -44,6 +44,8 @@ class HDDMrl(HDDM):
         self.dual = kwargs.pop("dual", False)
         self.alpha = kwargs.pop("alpha", True)
         self.gamma = kwargs.pop("gamma", True) # added for two-step task
+        m = kwargs['mfactor']
+        self.mfactor = m['freeparams']
         # mfactors = kwargs['mfactor']
         if 'lambda_' in self.mfactor:
             self.lambda_ = kwargs.pop("lambda_", True) # added for two-step task
