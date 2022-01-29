@@ -46,13 +46,15 @@ class HDDMrl(HDDM):
         self.gamma = kwargs.pop("gamma", True) # added for two-step task
         if 'lambda_' in kwargs['mfactor']:
             self.lambda_ = kwargs.pop("lambda_", True) # added for two-step task
+        else:
+            self.lambda_ = False
         if 'v' not in kwargs['mfactor']:
             self.v0 = kwargs.pop("v0", True) # added for Qmb vs Qmf regression
             if 'v1' in kwargs['mfactor']:
                 self.v1 = kwargs.pop("v1", True) # added for Qmb vs Qmf regression
             if 'v2' in kwargs['mfactor']:
                 self.v2 = kwargs.pop("v2", True) # added for Qmb vs Qmf regression
-
+                
         if 'z' not in kwargs['mfactor']:
             self.z0 = kwargs.pop("z0", True) # added for Qmb vs Qmf regression
             if 'z1' in kwargs['mfactor']:
