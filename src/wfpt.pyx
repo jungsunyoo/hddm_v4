@@ -635,6 +635,8 @@ def wiener_like_rlddm_2step_factorial(np.ndarray[double, ndim=1] x1, # 1st-stage
     cdef double z1 = 0  #if 'z1' in free_params.keys()
     cdef double z2 = 0  #if 'z2' in free_params.keys()
     cdef double lambda_ = 0  #if 'v0' in free_params.keys()
+    cdef double v = 0
+    cdef double z = 0.5
 
 
     for param in free_params.keys():
