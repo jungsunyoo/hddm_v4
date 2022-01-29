@@ -1102,6 +1102,9 @@ class HDDMBase(AccumulatorModel):
         self, data, bias=False, include=(), wiener_params=None, p_outlier=0.05, **kwargs
     ):
 
+
+        self.mfactor = kwargs['mfactor'] 
+
         self.default_intervars = kwargs.pop(
             "default_intervars", {"sz": 0, "st": 0, "sv": 0}
         )
@@ -1239,8 +1242,14 @@ class HDDMBase(AccumulatorModel):
                 else self.p_outlier
             )
         # JY modified on 2022-01-11 for 2step regression
-            # wfpt_parents["a"] = knodes["a_bottom"]
-            # wfpt_parents["v"] = knodes["v_bottom"]
+        # JY modified on 2022-01-28 for factorial model specification
+            if 'a' in self.mfactor:
+                wfpt_parents["a"] = knodes["a_bottom"]
+            if 'v' in self.mfactor:
+                wfpt_parents["v"] = knodes["v_bottom"]
+            if 'z' in self.mfactor:
+                wfpt_parents["z"] = knodes["z_bottom"] if "z" in self.include else 0.5
+                
             wfpt_parents["t"] = knodes["t_bottom"]
 
             # wfpt_parents["sv"] = (
@@ -1258,7 +1267,7 @@ class HDDMBase(AccumulatorModel):
             #     if "st" in self.include
             #     else self.default_intervars["st"]
             # )
-            # wfpt_parents["z"] = knodes["z_bottom"] if "z" in self.include else 0.5
+            
         return wfpt_parents
 
     def _create_wfpt_knode(self, knodes):

@@ -32,21 +32,33 @@ class HDDMrl(HDDM):
 
     # 2-stage rlddm regression
 
-    def __init__(self, *args, **kwargs):
+# factorial models
+# define mfactor as dict
+
+
+
+
+
+    def __init__(self,*args, **kwargs):
         self.non_centered = kwargs.pop("non_centered", False)
         self.dual = kwargs.pop("dual", False)
         self.alpha = kwargs.pop("alpha", True)
         self.gamma = kwargs.pop("gamma", True) # added for two-step task
-        self.lambda_ = kwargs.pop("lambda_", True) # added for two-step task
+        if 'lambda_' in kwargs['mfactor']:
+            self.lambda_ = kwargs.pop("lambda_", True) # added for two-step task
+        if 'v' not in kwargs['mfactor']:
+            self.v0 = kwargs.pop("v0", True) # added for Qmb vs Qmf regression
+            if 'v1' in kwargs['mfactor']:
+                self.v1 = kwargs.pop("v1", True) # added for Qmb vs Qmf regression
+            if 'v2' in kwargs['mfactor']:
+                self.v2 = kwargs.pop("v2", True) # added for Qmb vs Qmf regression
 
-        self.v0 = kwargs.pop("v0", True) # added for Qmb vs Qmf regression
-        self.v1 = kwargs.pop("v1", True) # added for Qmb vs Qmf regression
-        self.v2 = kwargs.pop("v2", True) # added for Qmb vs Qmf regression
-
-
-        self.z0 = kwargs.pop("z0", True)
-        self.z1 = kwargs.pop("z1", True)
-        self.z2 = kwargs.pop("z2", True)
+        if 'z' not in kwargs['mfactor']:
+            self.z0 = kwargs.pop("z0", True) # added for Qmb vs Qmf regression
+            if 'z1' in kwargs['mfactor']:
+                self.z1 = kwargs.pop("z1", True) # added for Qmb vs Qmf regression
+            if 'z2' in kwargs['mfactor']:
+                self.z2 = kwargs.pop("z2", True) # added for Qmb vs Qmf regression
 
 
         self.wfpt_rl_class = WienerRL
@@ -367,22 +379,28 @@ class HDDMrl(HDDM):
 
         # wfpt_parents["w"] = knodes["w_bottom"]
         wfpt_parents["gamma"] = knodes["gamma_bottom"]
-        wfpt_parents["lambda_"] = knodes["lambda__bottom"]
-
-        wfpt_parents["v0"] = knodes["v0_bottom"]
-        wfpt_parents["v1"] = knodes["v1_bottom"]
-        wfpt_parents["v2"] = knodes["v2_bottom"]
-
-        wfpt_parents["z0"] = knodes["z0_bottom"]
-        wfpt_parents["z1"] = knodes["z1_bottom"]
-        wfpt_parents["z2"] = knodes["z2_bottom"]
+        if self.lambda_:
+            wfpt_parents["lambda_"] = knodes["lambda__bottom"]
+        if self.v0:
+            wfpt_parents["v0"] = knodes["v0_bottom"]
+        if self.v1:
+            wfpt_parents["v1"] = knodes["v1_bottom"]
+        if self.v2:
+            wfpt_parents["v2"] = knodes["v2_bottom"]
+        if self.z0:
+            wfpt_parents["z0"] = knodes["z0_bottom"]
+        if self.z1: 
+            wfpt_parents["z1"] = knodes["z1_bottom"]
+        if self.z2:
+            wfpt_parents["z2"] = knodes["z2_bottom"]
 
         
         # wfpt_parents["v"] = knodes["v_bottom"]
         # wfpt_parents["t"] = knodes["t_bottom"]
         wfpt_parents["alpha"] = knodes["alpha_bottom"]
         wfpt_parents["pos_alpha"] = knodes["pos_alpha_bottom"] if self.dual else 100.00
-        # wfpt_parents["z"] = knodes["z_bottom"] if "z" in self.include else 0.5
+        if self.z:
+            wfpt_parents["z"] = knodes["z_bottom"] if "z" in self.include else 0.5
 
         return wfpt_parents
 
@@ -557,7 +575,92 @@ def wienerRL_like_2step_reg(x, v0, v1, v2, alpha, pos_alpha, gamma, lambda_, z0,
         p_outlier=p_outlier,
         **wp
     )
+
+
+
+# def wienerRL_like_2step_factorial(x, v0, v1, v2, alpha, pos_alpha, gamma, lambda_, z0, z1, z2,t, p_outlier=0): # regression ver2: bounded, a fixed to 1
+def wienerRL_like_2step_factorial(x, **kwargs): # regression ver2: bounded, a fixed to 1
+
+    wiener_params = {
+        "err": 1e-4,
+        "n_st": 2,
+        "n_sz": 2,
+        "use_adaptive": 1,
+        "simps_err": 1e-3,
+        "w_outlier": 0.1,
+    }
+    wp = wiener_params
+    free_params=kwargs
+
+    # free_params = {}
+    # if kwargs['v0']:
+    #     free_params['v0'] : kwargs['v0']
+    # if kwargs['v1']:
+    #     free_params['v1'] : kwargs['v1']    
+    # if kwargs['v2']:
+    #     free_params['v2'] : kwargs['v2']
+    # if kwargs['v']:
+    #     free_params['v'] : kwargs['v0']
+
+    response1 = x["response1"].values.astype(int)
+    response2 = x["response2"].values.astype(int)
+    state1 = x["state1"].values.astype(int)
+    state2 = x["state2"].values.astype(int)
+
+    isleft1 = x["isleft1"].values.astype(int)
+    isleft2 = x["isleft2"].values.astype(int)
+
+
+    q = x["q_init"].iloc[0]
+    feedback = x["feedback"].values.astype(float)
+    split_by = x["split_by"].values.astype(int)
+
+
+    # YJS added for two-step tasks on 2021-12-05
+    # nstates = x["nstates"].values.astype(int)
+    nstates = max(x["state2"].values.astype(int)) + 1
+
+
+    return wiener_like_rlddm_2step_factorial(
+        x["rt1"].values,
+        x["rt2"].values,
+
+        isleft1,
+        isleft2,
+
+        state1,
+        state2,
+        response1,
+        response2,
+        feedback,
+        split_by,
+        q,
+        alpha,
+        pos_alpha, 
+        # w, # added for two-step task
+        gamma, # added for two-step task 
+        # lambda_, # added for two-step task 
+        # v0, # intercept for first stage rt regression
+        # v1, # slope for mb
+        # v2, # slobe for mf
+        # v, # don't use second stage for now
+        # sv,
+        # a,
+        # z0, # bias: added for intercept regression 1st stage
+        # z1, # bias: added for slope regression mb 1st stage
+        # z2, # bias: added for slope regression mf 1st stage
+        # z,
+        # sz,
+        t,
+        nstates,
+
+        # st,
+        p_outlier=p_outlier,
+        **wp,
+        **free_params
+
+    )    
 # WienerRL = stochastic_from_dist("wienerRL", wienerRL_like)
 # WienerRL = stochastic_from_dist("wienerRL_2step", wienerRL_like_2step)
-WienerRL = stochastic_from_dist("wienerRL_2step_reg", wienerRL_like_2step_reg)
+WienerRL = stochastic_from_dist("wienerRL_2step_factorial", wienerRL_like_2step_factorial)
 
