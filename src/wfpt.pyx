@@ -364,7 +364,8 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
                       double q, double alpha, double pos_alpha, 
 
                       # double w, 
-                      double gamma, double lambda_, 
+                      double gamma, 
+                      # double lambda_, 
 
                       double v0, double v1, double v2, 
                       # double v, # don't use second stage
@@ -400,7 +401,7 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
     cdef double pos_alfa
 
     cdef double gamma_
-    cdef double lambda__
+    # cdef double lambda__
 
     # cdef np.ndarray[double, ndim=1] qs = np.array([q, q])
     cdef np.ndarray[double, ndim=2] qs_mf = np.ones((comb(nstates,2,exact=True),2))*q # first-stage MF Q-values
@@ -549,7 +550,7 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
             # else:
             alfa = (2.718281828459**alpha) / (1 + 2.718281828459**alpha)
             gamma_ = (2.718281828459**gamma) / (1 + 2.718281828459**gamma)
-            lambda__ = (2.718281828459**lambda_) / (1 + 2.718281828459**lambda_)
+            # lambda__ = (2.718281828459**lambda_) / (1 + 2.718281828459**lambda_)
 
             # qs[1] is upper bound, qs[0] is lower bound. feedbacks is reward
             # received on current trial.
@@ -562,7 +563,7 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
 
             dtQ2 = feedbacks[i] - qs_mb[s2s[i],responses2[i]] # delta stage 2 
             qs_mb[s2s[i], responses2[i]] = qs_mb[s2s[i],responses2[i]] + alfa * dtQ2 # delta update for qmb
-            qs_mf[s1s[i], responses1[i]] = qs_mf[s1s[i], responses1[i]] + lambda__ * dtQ2 # eligibility trace        
+            # qs_mf[s1s[i], responses1[i]] = qs_mf[s1s[i], responses1[i]] + lambda__ * dtQ2 # eligibility trace        
 
 
             # memory decay for unexperienced options in this trial

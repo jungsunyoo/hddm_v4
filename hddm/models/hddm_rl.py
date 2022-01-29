@@ -37,7 +37,7 @@ class HDDMrl(HDDM):
         self.dual = kwargs.pop("dual", False)
         self.alpha = kwargs.pop("alpha", True)
         self.gamma = kwargs.pop("gamma", True) # added for two-step task
-        self.lambda_ = kwargs.pop("lambda_", True) # added for two-step task
+        # self.lambda_ = kwargs.pop("lambda_", True) # added for two-step task
 
         self.v0 = kwargs.pop("v0", True) # added for Qmb vs Qmf regression
         self.v1 = kwargs.pop("v1", True) # added for Qmb vs Qmf regression
@@ -120,18 +120,18 @@ class HDDMrl(HDDM):
                         std_value=0.1,
                     )
                 ) 
-            if self.lambda_:
-                knodes.update(
-                    self._create_family_normal_non_centered(
-                        "lambda_",
-                        value=0,
-                        g_mu=0.2,
-                        g_tau=3 ** -2,
-                        std_lower=1e-10,
-                        std_upper=10,
-                        std_value=0.1,
-                    )
-                )
+            # if self.lambda_:
+            #     knodes.update(
+            #         self._create_family_normal_non_centered(
+            #             "lambda_",
+            #             value=0,
+            #             g_mu=0.2,
+            #             g_tau=3 ** -2,
+            #             std_lower=1e-10,
+            #             std_upper=10,
+            #             std_value=0.1,
+            #         )
+            #     )
 
             if self.v0:
                 knodes.update(
@@ -301,18 +301,18 @@ class HDDMrl(HDDM):
                         std_value=0.1,
                     )
                 )
-            if self.lambda_:
-                knodes.update(
-                    self._create_family_normal(
-                        "lambda_",
-                        value=0,
-                        g_mu=0.2,
-                        g_tau=3 ** -2,
-                        std_lower=1e-10,
-                        std_upper=10,
-                        std_value=0.1,
-                    )
-                )
+            # if self.lambda_:
+            #     knodes.update(
+            #         self._create_family_normal(
+            #             "lambda_",
+            #             value=0,
+            #             g_mu=0.2,
+            #             g_tau=3 ** -2,
+            #             std_lower=1e-10,
+            #             std_upper=10,
+            #             std_value=0.1,
+            #         )
+            #     )
 
             if self.v0:
 
@@ -367,7 +367,7 @@ class HDDMrl(HDDM):
 
         # wfpt_parents["w"] = knodes["w_bottom"]
         wfpt_parents["gamma"] = knodes["gamma_bottom"]
-        wfpt_parents["lambda_"] = knodes["lambda__bottom"]
+        # wfpt_parents["lambda_"] = knodes["lambda__bottom"]
 
         wfpt_parents["v0"] = knodes["v0_bottom"]
         wfpt_parents["v1"] = knodes["v1_bottom"]
@@ -491,7 +491,8 @@ def wienerRL_like_2step(x, v, alpha, pos_alpha, w, gamma, lambda_, sv, a, z, sz,
     )
 # def wienerRL_like_2step_reg(x, v, alpha, pos_alpha, w, gamma, lambda_, sv, a, z, sz, t, st, p_outlier=0):
 # def wienerRL_like_2step_reg(x, v, v0, v1, v2, alpha, pos_alpha, gamma, lambda_, sv, a, z, sz, t, st, p_outlier=0): # regression ver1: without bounds
-def wienerRL_like_2step_reg(x, v0, v1, v2, alpha, pos_alpha, gamma, lambda_, z0, z1, z2,t, p_outlier=0): # regression ver2: bounded, a fixed to 1
+# def wienerRL_like_2step_reg(x, v0, v1, v2, alpha, pos_alpha, gamma, lambda_, z0, z1, z2,t, p_outlier=0): # regression ver2: bounded, a fixed to 1
+def wienerRL_like_2step_reg(x, v0, v1, v2, alpha, pos_alpha, gamma, z0, z1, z2,t, p_outlier=0): # regression ver2: bounded, a fixed to 1
 
     wiener_params = {
         "err": 1e-4,
@@ -539,7 +540,7 @@ def wienerRL_like_2step_reg(x, v0, v1, v2, alpha, pos_alpha, gamma, lambda_, z0,
         pos_alpha, 
         # w, # added for two-step task
         gamma, # added for two-step task 
-        lambda_, # added for two-step task 
+        # lambda_, # added for two-step task 
         v0, # intercept for first stage rt regression
         v1, # slope for mb
         v2, # slobe for mf
