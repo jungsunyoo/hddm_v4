@@ -1099,11 +1099,12 @@ class HDDMBase(AccumulatorModel):
     """HDDM base class. Not intended to be used directly. Instead, use hddm.HDDM."""
 
     def __init__(
-        self, data, bias=False, include=(), wiener_params=None, p_outlier=0.05, **kwargs
+        self, data, bias=False, include=(), wiener_params=None, p_outlier=0.05, mfactor=(), **kwargs
     ):
 
 
-        self.mfactor = kwargs['mfactor'] 
+        # self.mfactor = kwargs['mfactor'] 
+        self.mfactor = mfactor
 
         self.default_intervars = kwargs.pop(
             "default_intervars", {"sz": 0, "st": 0, "sv": 0}
@@ -1249,7 +1250,7 @@ class HDDMBase(AccumulatorModel):
                 wfpt_parents["v"] = knodes["v_bottom"]
             if 'z' in self.mfactor:
                 wfpt_parents["z"] = knodes["z_bottom"] if "z" in self.include else 0.5
-                
+
             wfpt_parents["t"] = knodes["t_bottom"]
 
             # wfpt_parents["sv"] = (
