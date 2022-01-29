@@ -44,25 +44,27 @@ class HDDMrl(HDDM):
         self.dual = kwargs.pop("dual", False)
         self.alpha = kwargs.pop("alpha", True)
         self.gamma = kwargs.pop("gamma", True) # added for two-step task
-        if 'lambda_' in kwargs['mfactor']:
+        # mfactors = kwargs['mfactor']
+        if 'lambda_' in self.mfactor:
             self.lambda_ = kwargs.pop("lambda_", True) # added for two-step task
         else:
             self.lambda_ = False
-        if 'v' not in kwargs['mfactor']:
+        # if 'v' not in kwargs['mfactor']:
+        if 'v' not in self.mfactor:
             self.v = False
             self.v0 = kwargs.pop("v0", True) # added for Qmb vs Qmf regression
-            if 'v1' in kwargs['mfactor']:
+            if 'v1' in self.mfactor:
                 self.v1 = kwargs.pop("v1", True) # added for Qmb vs Qmf regression
-            if 'v2' in kwargs['mfactor']:
+            if 'v2' in self.mfactor:
                 self.v2 = kwargs.pop("v2", True) # added for Qmb vs Qmf regression
 
 
-        if 'z' not in kwargs['mfactor']:
+        if 'z' not in self.mfactor:
             self.z = False
             self.z0 = kwargs.pop("z0", True) # added for Qmb vs Qmf regression
-            if 'z1' in kwargs['mfactor']:
+            if 'z1' in self.mfactor:
                 self.z1 = kwargs.pop("z1", True) # added for Qmb vs Qmf regression
-            if 'z2' in kwargs['mfactor']:
+            if 'z2' in self.mfactor:
                 self.z2 = kwargs.pop("z2", True) # added for Qmb vs Qmf regression
 
 
