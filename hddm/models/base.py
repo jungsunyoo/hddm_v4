@@ -1128,12 +1128,15 @@ class HDDMBase(AccumulatorModel):
             # self.include = set(["t"]) # DDM parameter to use regardless of model
             params = ['t']
             # self.include = set(["v", "a", "t"])
-            if not self._kwargs['v_reg']:
+            # if not self._kwargs['v_reg']:
+            if not self.v_reg:
                 params.append('v')
-            if not self._kwargs['z_reg']:
+            # if not self._kwargs['z_reg']:
+            if not self.z_reg:
                 if bias:
                     params.append('z')
-            if not self._kwargs['a_fix']:
+            # if not self._kwargs['a_fix']:
+            if not self.a_fix:
                 params.append('a')
             self.include = set(params)
             if include is not None:
