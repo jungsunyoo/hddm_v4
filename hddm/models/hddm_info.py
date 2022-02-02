@@ -261,7 +261,7 @@ class HDDM(HDDMBase):
                 )
             )
 
-         if "t_2" in include:
+        if "t_2" in include:
             knodes.update(
                 self._create_family_gamma_gamma_hnormal(
                     "t_2", g_mean=0.4, g_std=0.2, value=0.001, std_std=1, std_value=0.2
