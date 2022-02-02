@@ -408,10 +408,18 @@ class HDDMrl(HDDM):
 
         if self.v_reg:
             wfpt_parents['v'] = 100.00
-            if self.qval == 'mb': # just use Qmb
-                wfpt_parents["v2"] = 100.00
-            elif self.qval == 'mf': # just use Qmf
-                wfpt_parents["v1"] = 100.00
+            if self.sep_q:
+                if self.qmb: # == 'mb': # just use MB Qvalues
+                    wfpt_parents["v2"] = 100.00
+                    wfpt_parents['qval'] = 1.00
+                # elif self.qval == 'mf':
+                else:
+                    wfpt_parents["v1"] = 100.00
+                    wfpt_parents['qval'] = 2.00
+
+            else:
+                wfpt_parents['qval'] = 0.00
+
 
 
         # if self.z_reg:
