@@ -47,6 +47,7 @@ class HDDMrl(HDDM):
         self.sep_q = kwargs.pop("sep_q", False) # In 1st stage, whether to use Qmf/Qmb separately    
         # self.sep_reg_qmf = kwargs.pop("sep_reg_qmf", False) # In 1st stage, whether to just model MF-Qval
         self.qval = kwargs.pop("qval", False) # specify which Qval to use (inputs = "mb", "mf")
+        self.sep_alpha = kwargs.pop("sep_alpha", False) # use different learning rates for second stage
 
         self.a_share = kwargs.pop("a_share", False) # whether to share a btw 1st & 2nd stage (if a!=1)
         self.v_share = kwargs.pop("v_share", False) # whether to share v btw 1st & 2nd stage (if v!=reg)
@@ -112,7 +113,18 @@ class HDDMrl(HDDM):
                         std_value=0.1,
                     )
                 )
-            
+            if self.two_stage and self.sep_alpha:
+                knodes.update(
+                    self._create_family_normal_non_centered(
+                        "alpha2",
+                        value=0,
+                        g_mu=0.2,
+                        g_tau=3 ** -2,
+                        std_lower=1e-10,
+                        std_upper=10,
+                        std_value=0.1,
+                    )
+                )            
             if self.gamma:
                 knodes.update(
                     self._create_family_normal_non_centered(
@@ -252,7 +264,18 @@ class HDDMrl(HDDM):
                         std_value=0.1,
                     )
                 )
-
+            if self.two_stage and self.sep_alpha:
+                knodes.update(
+                    self._create_family_normal(
+                        "alpha2",
+                        value=0,
+                        g_mu=0.2,
+                        g_tau=3 ** -2,
+                        std_lower=1e-10,
+                        std_upper=10,
+                        std_value=0.1,
+                    )
+                )
             if (not self.v_reg) and (not self.sep_q):
                 knodes.update(
                     self._create_family_normal(
@@ -355,12 +378,7 @@ class HDDMrl(HDDM):
         wfpt_parents["alpha"] = knodes["alpha_bottom"]
         wfpt_parents["pos_alpha"] = knodes["pos_alpha_bottom"] if self.dual else 100.00
 
-        # if self.two_stage:
-        #     wfpt_parents["alpha_2"] = knodes["alpha_2_bottom"]
-        # else:
-        wfpt_parents["alpha_2"] = knodes["alpha_2_bottom"] if self.two_stage else 100.00
-
-
+        wfpt_parents["alpha2"] = knodes["alpha2_bottom"] if self.two_stage and self.sep_alpha else 100.00
 
         if (not self.v_reg) and (not self.sep_q):    
             wfpt_parents["w"] = knodes["w_bottom"]
