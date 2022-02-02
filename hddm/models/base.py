@@ -1138,6 +1138,21 @@ class HDDMBase(AccumulatorModel):
             # if not self._kwargs['a_fix']:
             if not self.a_fix:
                 params.append('a')
+
+
+            if self.two_stage:
+                if not self.a_share:
+                    params.append('a_2')
+                if not self.v_share:
+                    params.append('v_2')
+                if not self.t_share:
+                    params.append('t_2')
+                if not self.z_share:
+                    if bias:
+                        params.append('z_2')
+
+
+
             self.include = set(params)
             if include is not None:
                 if include == "all":
@@ -1263,6 +1278,29 @@ class HDDMBase(AccumulatorModel):
                 wfpt_parents["v"] = knodes["v_bottom"]
             wfpt_parents["t"] = knodes["t_bottom"]
 
+
+
+
+
+
+
+            if self.two_stage:
+                if not self.a_share:
+                    wfpt_parents['a_2'] = knodes['a_2_bottom']
+                if not self.v_share:
+                    wfpt_parents['v_2'] = knodes['v_2_bottom']
+                if not self.t_share:
+                    wfpt_parents['t_2'] = knodes['t_2_bottom']
+                # if not self.z_share:
+                #     if bias:
+                #         wfpt_parents['z_2'] = knodes['z_2_bottom']
+
+
+
+
+
+
+
             # wfpt_parents["sv"] = (
             #     knodes["sv_bottom"]
             #     if "sv" in self.include
@@ -1279,6 +1317,7 @@ class HDDMBase(AccumulatorModel):
             #     else self.default_intervars["st"]
             # )
             wfpt_parents["z"] = knodes["z_bottom"] if "z" in self.include else 0.5
+            wfpt_parents["z_2"] = knodes["z_2_bottom"] if "z_2" in self.include else 0.5
         return wfpt_parents
 
     def _create_wfpt_knode(self, knodes):

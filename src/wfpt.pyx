@@ -376,6 +376,16 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
                       # double sz, 
                       double t,
                       int nstates,
+                      double qval,
+                      double two_stage,
+
+                      double a_2,
+                      double z_2, 
+                      double t_2,
+                      double v_2,
+                      double alpha2,
+                      double w,
+
                       # double st, 
 
                       double err, int n_st=10, int n_sz=10, bint use_adaptive=1, double simps_err=1e-8,
@@ -405,6 +415,7 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
     cdef double wp_outlier = w_outlier * p_outlier
     cdef double alfa
     cdef double pos_alfa
+    cdef double alfa2
 
     cdef double gamma_
     cdef double lambda__
@@ -461,6 +472,9 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
     else:
         pos_alfa = pos_alpha
 
+    # if alpha2==100.00: # if either only 1st stage or don't share lr: 
+
+
     # unique represent # of conditions
     for j in range(unique.shape[0]):
         s = unique[j]
@@ -482,6 +496,18 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
 
         qs_mb[:,0] = q
         qs_mb[:,1] = q
+
+
+        alfa = (2.718281828459**alpha) / (1 + 2.718281828459**alpha)
+        gamma_ = (2.718281828459**gamma) / (1 + 2.718281828459**gamma)
+        if alpha2 != 100.00:
+            alfa2 = (2.718281828459**alpha2) / (1 + 2.718281828459**alpha2)
+        else:
+            alfa2 = alfa            
+        if lambda_ != 100.00:
+            lambda__ = (2.718281828459**lambda_) / (1 + 2.718281828459**lambda_)
+        if w != 100.00:
+            w = (2.718281828459**w) / (1 + 2.718281828459**w)
 
         # don't calculate pdf for first trial but still update q
         # if feedbacks[0] > qs[responses[0]]:
@@ -506,14 +532,45 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
                 Qmb = np.dot(Tm, [np.max(qs_mb[planets[0],:]), np.max(qs_mb[planets[1],:])])
                 # qs = w * Qmb + (1-w) * qs_mf[s1s[i],:] # Update for 1st trial 
 
+                # if qval != 100: #
+
+
                 # dtq = qs[1] - qs[0]
                 dtq_mb = Qmb[0] - Qmb[1]
                 dtq_mf = qs_mf[s1s[i],0] - qs_mf[s1s[i],1]
-                v_ = v0 + (dtq_mb * v1) + (dtq_mf * v2) 
+                if v == 100.00: # if v_reg
+                    if qval == 0:
+                        v_ = v0 + (dtq_mb * v1) + (dtq_mf * v2) # use both Qvals
+                    elif qval == 1: # just mb
+                        v_ = v0 + (dtq_mb * v1)
+                    elif qval == 2: 
+                        v_ = v0 + (dtq_mf * v2) # just qmf
+                else: # if don't use v_reg:
+                    if qval == 0: # use both qmb and qmf
+                        qs = w * Qmb + (1-w) * qs_mf[s1s[i],:] # Update for 1st trial 
+                        dtq = qs[1] - qs[0]
+                        v_ = dtq * v
+                    elif qval == 1:
+                        v_ = dtq_mb * v
+                    elif qval==2:
+                        v_ = dtq*mf * v 
+
+                if z0 != 100.00: # if use z_reg:
+                    if qval == 0:
+                        z_ = z0 + (dtq_mb * z1) + (dtq_mf * z2) # use both Qvals
+                    elif qval == 1: # just mb
+                        z_ = z0 + (dtq_mb * z1)
+                    elif qval == 2: 
+                        z_ = z0 + (dtq_mf * z2) # just qmf
+                    sig = 1/(1+np.exp(-z_))
+                else: # if don't use z_reg:
+                    sig = z
+
+
                 # z_ = z0 + (dtq_mb * z1) + (dtq_mf * z2)
                 # sig =  np.where(z_<0, np.exp(z_)/(1+np.exp(z_)), 1/(1+np.exp(-z_))) # perform sigmoid on z to bound it [0,1]
                 # sig = 1/(1+np.exp(-z_))
-                sig = z
+                
                 rt = x1s[i]
                 # if qs[0] > qs[1]:
                 #     dtq = -dtq
@@ -525,7 +582,7 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
 
                 # p = full_pdf(rt, (dtq * v), sv, a, z,
                 #              sz, t, st, err, n_st, n_sz, use_adaptive, simps_err)
-                p = full_pdf(rt, v_, sv, 1, sig,
+                p = full_pdf(rt, v_, sv, a, sig,
                              sz, t, st, err, n_st, n_sz, use_adaptive, simps_err)                
                 # If one probability = 0, the log sum will be -Inf
                 p = p * (1 - p_outlier) + wp_outlier
@@ -535,15 +592,26 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
 
 
                 # # # 2nd stage
-                # qs = qs_mb[s2s[i],:]
-                # dtq = qs[1] - qs[0]
-                # rt = x2s[i]
-                # if isleft2s[i] == 0:
-                # # if qs[0] > qs[1]:
-                #     dtq = -dtq
-                #     rt = -rt           
-                # p = full_pdf(rt, (dtq * v), sv, a, z, sz, t, st, err, n_st, n_sz, use_adaptive, simps_err)
+                if two_stage == 1.00:
 
+                    v_2_ = v if v_2==100.00 else v_2
+                    a_2_ = a if a_2 == 100.00 else a_2 
+                    z_2_ = z if z_2 == 100.00 else z_2 
+                    t_2_ = t if t_2 == 100.00 else t_2                                        
+
+                    qs = qs_mb[s2s[i],:]
+                    dtq = qs[1] - qs[0]
+                    rt = x2s[i]
+                    if isleft2s[i] == 0:
+                    # if qs[0] > qs[1]:
+                        dtq = -dtq
+                        rt = -rt           
+                    p = full_pdf(rt, (dtq * v_2_), sv, a_2_, z_2_, sz, t_2_, st, err, n_st, n_sz, use_adaptive, simps_err)
+                    # If one probability = 0, the log sum will be -Inf
+                    p = p * (1 - p_outlier) + wp_outlier
+                    if p == 0:
+                        return -np.inf
+                    sum_logp += log(p)
 
 
             # update Q values, regardless of pdf    
@@ -555,9 +623,7 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
             # if feedbacks[i] > qs[responses[i]]:
             #     alfa = (2.718281828459**pos_alfa) / (1 + 2.718281828459**pos_alfa)
             # else:
-            alfa = (2.718281828459**alpha) / (1 + 2.718281828459**alpha)
-            gamma_ = (2.718281828459**gamma) / (1 + 2.718281828459**gamma)
-            # lambda__ = (2.718281828459**lambda_) / (1 + 2.718281828459**lambda_)
+
 
             # qs[1] is upper bound, qs[0] is lower bound. feedbacks is reward
             # received on current trial.
@@ -569,8 +635,9 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
             qs_mf[s1s[i], responses1[i]] = qs_mf[s1s[i], responses1[i]] + alfa * dtQ1 # delta update for qmf
 
             dtQ2 = feedbacks[i] - qs_mb[s2s[i],responses2[i]] # delta stage 2 
-            qs_mb[s2s[i], responses2[i]] = qs_mb[s2s[i],responses2[i]] + alfa * dtQ2 # delta update for qmb
-            # qs_mf[s1s[i], responses1[i]] = qs_mf[s1s[i], responses1[i]] + lambda__ * dtQ2 # eligibility trace        
+            qs_mb[s2s[i], responses2[i]] = qs_mb[s2s[i],responses2[i]] + alfa2 * dtQ2 # delta update for qmb
+            if lambda_ != 100.00: # if using eligibility trace
+                qs_mf[s1s[i], responses1[i]] = qs_mf[s1s[i], responses1[i]] + lambda__ * dtQ2 # eligibility trace        
 
 
             # memory decay for unexperienced options in this trial

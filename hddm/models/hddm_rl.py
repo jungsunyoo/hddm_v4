@@ -43,6 +43,16 @@ class HDDMrl(HDDM):
         self.z_reg = kwargs.pop("z_reg", False)
         self.a_fix = kwargs.pop("a_fix", False)
 
+        self.two_stage = kwargs.pop("two_stage", False) # whether to RLDDM just 1st stage or both stages
+        self.sep_q = kwargs.pop("sep_q", False) # In 1st stage, whether to use Qmf/Qmb separately    
+        # self.sep_reg_qmf = kwargs.pop("sep_reg_qmf", False) # In 1st stage, whether to just model MF-Qval
+        self.qval = kwargs.pop("qval", False) # specify which Qval to use (inputs = "mb", "mf")
+
+        self.a_share = kwargs.pop("a_share", False) # whether to share a btw 1st & 2nd stage (if a!=1)
+        self.v_share = kwargs.pop("v_share", False) # whether to share v btw 1st & 2nd stage (if v!=reg)
+        self z_share = kwargs.pop("z_share", False) # whether to share z btw 1st & 2nd stage (if z!=reg)
+        self.t_share = kwargs.pop("t_share", False) # whether to share t btw 1st & 2nd stage
+
         self.wfpt_rl_class = WienerRL
 
         super(HDDMrl, self).__init__(*args, **kwargs)
@@ -76,6 +86,20 @@ class HDDMrl(HDDM):
                         std_value=0.1,
                     )
                 )
+
+            if (not self.v_reg) and (not self.sep_q):    
+                knodes.update(
+                    self._create_family_normal_non_centered(
+                        "w",
+                        value=0,
+                        g_mu=0.2,
+                        g_tau=3 ** -2,
+                        std_lower=1e-10,
+                        std_upper=10,
+                        std_value=0.1,
+                    )
+                )
+
             if self.dual:
                 knodes.update(
                     self._create_family_normal_non_centered(
@@ -228,6 +252,21 @@ class HDDMrl(HDDM):
                         std_value=0.1,
                     )
                 )
+
+            if (not self.v_reg) and (not self.sep_q):
+                knodes.update(
+                    self._create_family_normal(
+                        "w",
+                        value=0,
+                        g_mu=0.2,
+                        g_tau=3 ** -2,
+                        std_lower=1e-10,
+                        std_upper=10,
+                        std_value=0.1,
+                    )
+                )
+
+
             if self.dual:
                 knodes.update(
                     self._create_family_normal(
@@ -317,7 +356,11 @@ class HDDMrl(HDDM):
         wfpt_parents["pos_alpha"] = knodes["pos_alpha_bottom"] if self.dual else 100.00
 
 
-        # wfpt_parents["w"] = knodes["w_bottom"]
+        if (not self.v_reg) and (not self.sep_q):    
+            wfpt_parents["w"] = knodes["w_bottom"]
+        else:
+            wfpt_parents["w"] = 100.00
+
         wfpt_parents["gamma"] = knodes["gamma_bottom"]
         wfpt_parents["lambda_"] = knodes["lambda__bottom"] if self.lambda_ else 100.00
 
@@ -329,12 +372,41 @@ class HDDMrl(HDDM):
         wfpt_parents["z1"] = knodes["z1_bottom"] if self.z_reg else 100.00
         wfpt_parents["z2"] = knodes["z2_bottom"] if self.z_reg else 100.00
 
+        if self.sep_q:
+            if self.qval == 'mb': # just use MB Qvalues
+                wfpt_parents['qval'] = 1.00
+            elif self.qval == 'mf':
+                wfpt_parents['qval'] = 2.00
+        else:
+            wfpt_parents['qval'] = 0.00
+
         if self.v_reg:
             wfpt_parents['v'] = 100.00
-        if self.z_reg:
-            wfpt_parents['z'] = 100.00
+            if self.qval == 'mb': # just use Qmb
+                wfpt_parents["v2"] = 100.00
+            elif self.qval == 'mf': # just use Qmf
+                wfpt_parents["v1"] = 100.00
+
+
+        # if self.z_reg:
+        #     wfpt_parents['z'] = 100.00
         if self.a_fix:
-            wfpt_parents['a'] = 100.00    
+            wfpt_parents['a'] = 100.00   
+
+        if self.two_stage: # two stage RLDDM
+            wfpt_parents['two_stage'] = 1.00
+            if self.v_share:
+                wfpt_parents['v_2'] = 100.00
+            if self.a_share:
+                wfpt_parents['a_2'] = 100.00
+            if self.z_share:
+                wfpt_parents['z_2'] = 100.00
+            if self.t_share:
+                wfpt_parents['t_2'] = 100.00
+        else:
+            wfpt_parents['two_stage'] = 0.00
+
+
 
         # wfpt_parents["z"] = knodes["z_bottom"] if "z" in self.include else 0.5
 
@@ -446,7 +518,7 @@ def wienerRL_like_2step(x, v, alpha, pos_alpha, w, gamma, lambda_, sv, a, z, sz,
 # def wienerRL_like_2step_reg(x, v, alpha, pos_alpha, w, gamma, lambda_, sv, a, z, sz, t, st, p_outlier=0):
 # def wienerRL_like_2step_reg(x, v, v0, v1, v2, alpha, pos_alpha, gamma, lambda_, sv, a, z, sz, t, st, p_outlier=0): # regression ver1: without bounds
 # def wienerRL_like_2step_reg(x, v0, v1, v2, alpha, pos_alpha, gamma, lambda_, z0, z1, z2,t, p_outlier=0): # regression ver2: bounded, a fixed to 1
-def wienerRL_like_2step_reg(x, v0, v1, v2, z0, z1, z2,lambda_, alpha, pos_alpha, gamma, a,z,t,v, p_outlier=0): # regression ver2: bounded, a fixed to 1
+def wienerRL_like_2step_reg(x, v0, v1, v2, z0, z1, z2,lambda_, alpha, pos_alpha, gamma, a,z,t,v, a_2, z_2, t_2,v_2,alpha2, qval,two_stage, w, p_outlier=0): # regression ver2: bounded, a fixed to 1
 
     wiener_params = {
         "err": 1e-4,
@@ -471,9 +543,14 @@ def wienerRL_like_2step_reg(x, v0, v1, v2, z0, z1, z2,lambda_, alpha, pos_alpha,
     split_by = x["split_by"].values.astype(int)
 
 
-    # YJS added for two-step tasks on 2021-12-05
+    # JY added for two-step tasks on 2021-12-05
     # nstates = x["nstates"].values.astype(int)
     nstates = max(x["state2"].values.astype(int)) + 1
+
+    # # JY added for which q-value to use (if sep, qmb or qmf)
+    # qval = 0 # default: simultaneous
+
+    # if
 
 
     return wiener_like_rlddm_2step_reg(
@@ -508,6 +585,15 @@ def wienerRL_like_2step_reg(x, v0, v1, v2, z0, z1, z2,lambda_, alpha, pos_alpha,
         # sz,
         t,
         nstates,
+        qval,
+        two_stage,
+
+        a_2,
+        z_2,
+        t_2,
+        v_2,
+        alpha2,
+        w, 
         # st,
         p_outlier=p_outlier,
         **wp

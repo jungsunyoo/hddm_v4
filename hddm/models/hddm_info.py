@@ -229,18 +229,45 @@ class HDDM(HDDMBase):
                     "a", g_mean=1.5, g_std=0.75, std_std=2, std_value=0.1, value=1
                 )
             )
+
+        if "a_2" in include:
+            knodes.update(
+                self._create_family_gamma_gamma_hnormal(
+                    "a_2", g_mean=1.5, g_std=0.75, std_std=2, std_value=0.1, value=1
+                )
+            )
+
+
         if "v" in include:
             knodes.update(
                 self._create_family_normal_normal_hnormal(
                     "v", value=2, g_mu=2, g_tau=3 ** -2, std_std=2
                 )
             )
+
+        if "v_2" in include:
+            knodes.update(
+                self._create_family_normal_normal_hnormal(
+                    "v_2", value=2, g_mu=2, g_tau=3 ** -2, std_std=2
+                )
+            )
+
+
+
         if "t" in include:
             knodes.update(
                 self._create_family_gamma_gamma_hnormal(
                     "t", g_mean=0.4, g_std=0.2, value=0.001, std_std=1, std_value=0.2
                 )
             )
+
+         if "t_2" in include:
+            knodes.update(
+                self._create_family_gamma_gamma_hnormal(
+                    "t_2", g_mean=0.4, g_std=0.2, value=0.001, std_std=1, std_value=0.2
+                )
+            )
+           
         if "sv" in include:
             knodes["sv_bottom"] = Knode(
                 pm.HalfNormal, "sv", tau=2 ** -2, value=1, depends=self.depends["sv"]
@@ -263,6 +290,13 @@ class HDDM(HDDMBase):
                     "z", value=0.5, g_tau=0.5 ** -2, std_std=0.05
                 )
             )
+        if "z_2" in include:
+            knodes.update(
+                self._create_family_invlogit(
+                    "z_2", value=0.5, g_tau=0.5 ** -2, std_std=0.05
+                )
+            )
+
         if "p_outlier" in include:
             knodes["p_outlier_bottom"] = Knode(
                 pm.Beta,
@@ -281,16 +315,34 @@ class HDDM(HDDMBase):
             knodes.update(
                 self._create_family_trunc_normal("a", lower=1e-3, upper=1e3, value=1)
             )
+        if "a_2" in include:
+            knodes.update(
+                self._create_family_trunc_normal("a_2", lower=1e-3, upper=1e3, value=1)
+            )
+
         if "v" in include:
             knodes.update(
                 self._create_family_normal_normal_hnormal(
                     "v", value=0, g_tau=50 ** -2, std_std=10
                 )
             )
+        if "v_2" in include:
+            knodes.update(
+                self._create_family_normal_normal_hnormal(
+                    "v_2", value=0, g_tau=50 ** -2, std_std=10
+                )
+            )
+
         if "t" in include:
             knodes.update(
                 self._create_family_trunc_normal("t", lower=1e-3, upper=1e3, value=0.01)
             )
+        if "t_2" in include:
+            knodes.update(
+                self._create_family_trunc_normal("t_2", lower=1e-3, upper=1e3, value=0.01)
+            )
+
+
         if "sv" in include:
             knodes["sv_bottom"] = Knode(
                 pm.Uniform,
@@ -319,6 +371,14 @@ class HDDM(HDDMBase):
                     "z", value=0.5, g_tau=10 ** -2, std_std=0.5
                 )
             )
+
+        if "z_2" in include:
+            knodes.update(
+                self._create_family_invlogit(
+                    "z_2", value=0.5, g_tau=10 ** -2, std_std=0.5
+                )
+            )
+
         if "p_outlier" in include:
             knodes["p_outlier_bottom"] = Knode(
                 pm.Beta,
