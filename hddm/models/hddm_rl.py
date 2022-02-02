@@ -431,6 +431,11 @@ class HDDMrl(HDDM):
                 wfpt_parents['t_2'] = 100.00
         else:
             wfpt_parents['two_stage'] = 0.00
+            # since only first-stage is modeled, none of v_2,a_2,t_2,z_2 is used
+            wfpt_parents['v_2'] = 100.00
+            wfpt_parents['a_2'] = 100.00
+            wfpt_parents['z_2'] = 100.00
+            wfpt_parents['t_2'] = 100.00
 
 
 
