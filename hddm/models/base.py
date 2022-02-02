@@ -1240,9 +1240,10 @@ class HDDMBase(AccumulatorModel):
             )
         # JY modified on 2022-01-11 for 2step regression
         # JY modified on 2022-02-01 for factorial design
-        
-            wfpt_parents['a'] = knodes["a_bottom"] if not self.a_fix
-            wfpt_parents["v"] = knodes["v_bottom"] if not self.v_reg    
+            if not self.a_fix:
+                wfpt_parents["a"] = knodes["a_bottom"]
+            if not self.v_reg:
+                wfpt_parents["v"] = knodes["v_bottom"]
             wfpt_parents["t"] = knodes["t_bottom"]
 
             # wfpt_parents["sv"] = (
