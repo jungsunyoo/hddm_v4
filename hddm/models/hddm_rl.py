@@ -48,10 +48,10 @@ class HDDMrl(HDDM):
         # self.sep_reg_qmf = kwargs.pop("sep_reg_qmf", False) # In 1st stage, whether to just model MF-Qval
         self.qval = kwargs.pop("qval", False) # specify which Qval to use (inputs = "mb", "mf")
 
-        self.a_share = kwargs.pop("a_share", False) # whether to share a btw 1st & 2nd stage (if a is not 1)
-        self.v_share = kwargs.pop("v_share", False) # whether to share v btw 1st & 2nd stage (if v is not reg)
-        self z_share = kwargs.pop("z_share", False) # whether to share z btw 1st & 2nd stage (if z is not reg)
-        self.t_share = kwargs.pop("t_share", False) # whether to share t btw 1st & 2nd stage
+        self.a_share = kwargs.pop("a_share", False) 
+        self.v_share = kwargs.pop("v_share", False) 
+        self z_share = kwargs.pop("z_share", False) 
+        self.t_share = kwargs.pop("t_share", False) 
 
         self.wfpt_rl_class = WienerRL
 
