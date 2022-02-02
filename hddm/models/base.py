@@ -1150,7 +1150,7 @@ class HDDMBase(AccumulatorModel):
 
 
             if self.two_stage:
-                if not self.a_share and not self.a_fix:
+                if not self.a_share: # and not self.a_fix:
                     params.append('a_2')
                 if not self.v_share:
                     params.append('v_2')
