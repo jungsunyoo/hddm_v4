@@ -37,36 +37,28 @@ class HDDMrl(HDDM):
         self.dual = kwargs.pop("dual", False)
         self.alpha = kwargs.pop("alpha", True)
         self.gamma = kwargs.pop("gamma", True) # added for two-step task
-        # self.lambda_ = kwargs.pop("lambda_", True) # added for two-step task
 
-        self.v0 = kwargs.pop("v0", True) # added for Qmb vs Qmf regression
-        self.v1 = kwargs.pop("v1", True) # added for Qmb vs Qmf regression
-        self.v2 = kwargs.pop("v2", True) # added for Qmb vs Qmf regression
-
-
-        # self.z0 = kwargs.pop("z0", True)
-        # self.z1 = kwargs.pop("z1", True)
-        # self.z2 = kwargs.pop("z2", True)
-
+        self.lambda_ = kwargs.pop("lambda_", False) # added for two-step task
+        self.v_reg = kwargs.pop("v_reg", False) # added for regression in two-step task
+        self.z_reg = kwargs.pop("z_reg", False)
+        self.a_fix = kwargs.pop("a_fix", False)
 
         self.wfpt_rl_class = WienerRL
 
         super(HDDMrl, self).__init__(*args, **kwargs)
 
-
-
-
-
-
-
-
-
     def _create_stochastic_knodes(self, include):
         params = ["t"]
         if "p_outlier" in self.include:
             params.append("p_outlier")
-        if "z" in self.include:
+        # if "z" in self.include:
+        if not self.v_reg:
+            params.append("v")
+        if not self.z_reg:
             params.append("z")
+        if not self.a_fix:
+            params.append("a")
+
         include = set(params)
 
         knodes = super(HDDMrl, self)._create_stochastic_knodes(include)
@@ -96,18 +88,7 @@ class HDDMrl(HDDM):
                         std_value=0.1,
                     )
                 )
-            # if self.w:
-            #     knodes.update(
-            #         self._create_family_normal_non_centered(
-            #             "w",
-            #             value=0,
-            #             g_mu=0.2,
-            #             g_tau=3 ** -2,
-            #             std_lower=1e-10,
-            #             std_upper=10,
-            #             std_value=0.1,
-            #         )
-            #     ) 
+            
             if self.gamma:
                 knodes.update(
                     self._create_family_normal_non_centered(
@@ -120,20 +101,20 @@ class HDDMrl(HDDM):
                         std_value=0.1,
                     )
                 ) 
-            # if self.lambda_:
-            #     knodes.update(
-            #         self._create_family_normal_non_centered(
-            #             "lambda_",
-            #             value=0,
-            #             g_mu=0.2,
-            #             g_tau=3 ** -2,
-            #             std_lower=1e-10,
-            #             std_upper=10,
-            #             std_value=0.1,
-            #         )
-            #     )
+            if self.lambda_:
+                knodes.update(
+                    self._create_family_normal_non_centered(
+                        "lambda_",
+                        value=0,
+                        g_mu=0.2,
+                        g_tau=3 ** -2,
+                        std_lower=1e-10,
+                        std_upper=10,
+                        std_value=0.1,
+                    )
+                )
 
-            if self.v0:
+            if self.v_reg:
                 knodes.update(
                     # self._create_family_normal_non_centered(
                     #     "v0",
@@ -157,7 +138,7 @@ class HDDMrl(HDDM):
                     )                    
                 )
 
-            if self.v1:
+            # if self.v1:
                 knodes.update(
                     # self._create_family_normal_non_centered(
                     #     "v1",
@@ -179,8 +160,8 @@ class HDDMrl(HDDM):
                         std_upper=10,
                         std_value=0.1,
                     )                    
-            )
-            if self.v2:
+                )
+            # if self.v2:
                 knodes.update(
                     # self._create_family_normal_non_centered(
                     #     "v2",
@@ -202,54 +183,36 @@ class HDDMrl(HDDM):
                         std_upper=10,
                         std_value=0.1,
                     )                   
-            )
+                )
 
-            # if self.z0:
-            #     knodes.update(
-            #         # self._create_family_normal_non_centered(
-            #         #     "v0",
-            #         #     value=0,
-            #         #     g_tau=50 ** -2, 
-            #         #     # std_std=10,
-            #         #     # g_mu=0.2,
-            #         #     # g_tau=3 ** -2,
-            #         #     std_lower=1e-10,
-            #         #     std_upper=10,
-            #         #     std_value=0.1,
-            #         # )
-            #     self._create_family_invlogit(
-            #         "z0", value=0.5, g_tau=0.5 ** -2, std_std=0.05)                    
+            if self.z_reg:
+                knodes.update(
+                    # self._create_family_normal_non_centered(
+                    #     "v0",
+                    #     value=0,
+                    #     g_tau=50 ** -2, 
+                    #     # std_std=10,
+                    #     # g_mu=0.2,
+                    #     # g_tau=3 ** -2,
+                    #     std_lower=1e-10,
+                    #     std_upper=10,
+                    #     std_value=0.1,
+                    # )
+                self._create_family_invlogit(
+                    "z0", value=0.5, g_tau=0.5 ** -2, std_std=0.05)                    
 
-            #     )
+                )
 
             # if self.z1:
-            #     knodes.update(
-            #         self._create_family_normal_non_centered(
-            #             "v1",
-            #             value=0,
-            #             g_tau=50 ** -2, 
-            #             # std_std=10,
-            #             # g_mu=0.2,
-            #             # g_tau=3 ** -2,
-            #             std_lower=1e-10,
-            #             std_upper=10,
-            #             std_value=0.1,
-            #         )
-            # )
+                knodes.update(
+                self._create_family_invlogit(
+                    "z1", value=0.5, g_tau=0.5 ** -2, std_std=0.05)  
+            )
             # if self.z2:
-            #     knodes.update(
-            #         self._create_family_normal_non_centered(
-            #             "v2",
-            #             value=0,
-            #             g_tau=50 ** -2, 
-            #             # std_std=10,
-            #             # g_mu=0.2,
-            #             # g_tau=3 ** -2,
-            #             std_lower=1e-10,
-            #             std_upper=10,
-            #             std_value=0.1,
-            #         )
-            # )
+                knodes.update(
+                self._create_family_invlogit(
+                    "z2", value=0.5, g_tau=0.5 ** -2, std_std=0.05)  
+            )
 
 
         else:
@@ -277,18 +240,7 @@ class HDDMrl(HDDM):
                         std_value=0.1,
                     )
                 )
-            # if self.w:
-            #     knodes.update(
-            #         self._create_family_normal(
-            #             "w",
-            #             value=0,
-            #             g_mu=0.2,
-            #             g_tau=3 ** -2,
-            #             std_lower=1e-10,
-            #             std_upper=10,
-            #             std_value=0.1,
-            #         )
-            #     )   
+
             if self.gamma:
                 knodes.update(
                     self._create_family_normal(
@@ -301,20 +253,20 @@ class HDDMrl(HDDM):
                         std_value=0.1,
                     )
                 )
-            # if self.lambda_:
-            #     knodes.update(
-            #         self._create_family_normal(
-            #             "lambda_",
-            #             value=0,
-            #             g_mu=0.2,
-            #             g_tau=3 ** -2,
-            #             std_lower=1e-10,
-            #             std_upper=10,
-            #             std_value=0.1,
-            #         )
-            #     )
+            if self.lambda_:
+                knodes.update(
+                    self._create_family_normal(
+                        "lambda_",
+                        value=0,
+                        g_mu=0.2,
+                        g_tau=3 ** -2,
+                        std_lower=1e-10,
+                        std_upper=10,
+                        std_value=0.1,
+                    )
+                )
 
-            if self.v0:
+            if self.v_reg:
 
                 knodes.update(
                 self._create_family_normal_normal_hnormal(
@@ -322,13 +274,13 @@ class HDDMrl(HDDM):
                 )
             )
 
-            if self.v1:
+            # if self.v1:
                 knodes.update(
                 self._create_family_normal_normal_hnormal(
                     "v1", value=0, g_tau=50 ** -2, std_std=10 # uninformative prior
                 )
             )
-            if self.v2:
+            # if self.v2:
                 knodes.update(
                 self._create_family_normal_normal_hnormal(
                     "v2", value=0, g_tau=50 ** -2, std_std=10 # uninformative prior
@@ -336,53 +288,55 @@ class HDDMrl(HDDM):
             )
             # )
 
-            # if self.z0:
-            #     knodes.update(
-            #     self._create_family_normal_normal_hnormal(
-            #         "z0", value=0, g_tau=50 ** -2, std_std=10 # uninformative prior
-            #     )
-            # )
+            if self.z_reg:
+                knodes.update(
+                self._create_family_normal_normal_hnormal(
+                    "z0", value=0, g_tau=50 ** -2, std_std=10 # uninformative prior
+                )
+            )
 
             # if self.z1:
-            #     knodes.update(
-            #     self._create_family_normal_normal_hnormal(
-            #         "z1", value=0, g_tau=50 ** -2, std_std=10 # uninformative prior
-            #     )
-            # )
+                knodes.update(
+                self._create_family_normal_normal_hnormal(
+                    "z1", value=0, g_tau=50 ** -2, std_std=10 # uninformative prior
+                )
+            )
             # if self.z2:
-            #     knodes.update(
-            #     self._create_family_normal_normal_hnormal(
-            #         "z2", value=0, g_tau=50 ** -2, std_std=10 # uninformative prior
-            #     )
-            # )
+                knodes.update(
+                self._create_family_normal_normal_hnormal(
+                    "z2", value=0, g_tau=50 ** -2, std_std=10 # uninformative prior
+                )
+            )
 
         return knodes
 
     def _create_wfpt_parents_dict(self, knodes):
         wfpt_parents = OrderedDict()
         wfpt_parents = super(HDDMrl, self)._create_wfpt_parents_dict(knodes)
-        # wfpt_parents["alpha"] = knodes["alpha_bottom"]
-        # wfpt_parents["pos_alpha"] = knodes["pos_alpha_bottom"] if self.dual else 100.00
+        wfpt_parents["alpha"] = knodes["alpha_bottom"]
+        wfpt_parents["pos_alpha"] = knodes["pos_alpha_bottom"] if self.dual else 100.00
 
 
         # wfpt_parents["w"] = knodes["w_bottom"]
         wfpt_parents["gamma"] = knodes["gamma_bottom"]
-        # wfpt_parents["lambda_"] = knodes["lambda__bottom"]
+        wfpt_parents["lambda_"] = knodes["lambda__bottom"] if self.lambda_ else 100.00
 
-        wfpt_parents["v0"] = knodes["v0_bottom"]
-        wfpt_parents["v1"] = knodes["v1_bottom"]
-        wfpt_parents["v2"] = knodes["v2_bottom"]
+        wfpt_parents["v0"] = knodes["v0_bottom"] if self.v_reg else 100.00
+        wfpt_parents["v1"] = knodes["v1_bottom"] if self.v_reg else 100.00
+        wfpt_parents["v2"] = knodes["v2_bottom"] if self.v_reg else 100.00
 
-        # wfpt_parents["z0"] = knodes["z0_bottom"]
-        # wfpt_parents["z1"] = knodes["z1_bottom"]
-        # wfpt_parents["z2"] = knodes["z2_bottom"]
+        wfpt_parents["z0"] = knodes["z0_bottom"] if self.z_reg else 100.00
+        wfpt_parents["z1"] = knodes["z1_bottom"] if self.z_reg else 100.00
+        wfpt_parents["z2"] = knodes["z2_bottom"] if self.z_reg else 100.00
 
-        
-        # wfpt_parents["v"] = knodes["v_bottom"]
-        # wfpt_parents["t"] = knodes["t_bottom"]
-        wfpt_parents["alpha"] = knodes["alpha_bottom"]
-        wfpt_parents["pos_alpha"] = knodes["pos_alpha_bottom"] if self.dual else 100.00
-        wfpt_parents["z"] = knodes["z_bottom"] if "z" in self.include else 0.5
+        if self.v_reg:
+            wfpt_parents['v'] = 100.00
+        if self.z_reg:
+            wfpt_parents['z'] = 100.00
+        if self.a_fix:
+            wfpt_parents['a'] = 100.00    
+
+        # wfpt_parents["z"] = knodes["z_bottom"] if "z" in self.include else 0.5
 
         return wfpt_parents
 
@@ -492,7 +446,7 @@ def wienerRL_like_2step(x, v, alpha, pos_alpha, w, gamma, lambda_, sv, a, z, sz,
 # def wienerRL_like_2step_reg(x, v, alpha, pos_alpha, w, gamma, lambda_, sv, a, z, sz, t, st, p_outlier=0):
 # def wienerRL_like_2step_reg(x, v, v0, v1, v2, alpha, pos_alpha, gamma, lambda_, sv, a, z, sz, t, st, p_outlier=0): # regression ver1: without bounds
 # def wienerRL_like_2step_reg(x, v0, v1, v2, alpha, pos_alpha, gamma, lambda_, z0, z1, z2,t, p_outlier=0): # regression ver2: bounded, a fixed to 1
-def wienerRL_like_2step_reg(x, v0, v1, v2, alpha, pos_alpha, gamma, z,t, p_outlier=0): # regression ver2: bounded, a fixed to 1
+def wienerRL_like_2step_reg(x, v0, v1, v2, z0, z1, z2,lambda_, alpha, pos_alpha, gamma, a,z,t, p_outlier=0): # regression ver2: bounded, a fixed to 1
 
     wiener_params = {
         "err": 1e-4,
@@ -540,16 +494,16 @@ def wienerRL_like_2step_reg(x, v0, v1, v2, alpha, pos_alpha, gamma, z,t, p_outli
         pos_alpha, 
         # w, # added for two-step task
         gamma, # added for two-step task 
-        # lambda_, # added for two-step task 
+        lambda_, # added for two-step task 
         v0, # intercept for first stage rt regression
         v1, # slope for mb
         v2, # slobe for mf
-        # v, # don't use second stage for now
+        v, # don't use second stage for now
         # sv,
-        # a,
-        # z0, # bias: added for intercept regression 1st stage
-        # z1, # bias: added for slope regression mb 1st stage
-        # z2, # bias: added for slope regression mf 1st stage
+        a,
+        z0, # bias: added for intercept regression 1st stage
+        z1, # bias: added for slope regression mb 1st stage
+        z2, # bias: added for slope regression mf 1st stage
         z,
         # sz,
         t,

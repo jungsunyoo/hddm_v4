@@ -365,13 +365,13 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
 
                       # double w, 
                       double gamma, 
-                      # double lambda_, 
+                      double lambda_, 
 
                       double v0, double v1, double v2, 
-                      # double v, # don't use second stage
+                      double v, # don't use second stage
                       # double sv, 
-                      # double a, 
-                      # double z0, double z1, double z2,
+                      double a, 
+                      double z0, double z1, double z2,
                       double z, 
                       # double sz, 
                       double t,
@@ -382,9 +382,15 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
                       double p_outlier=0, double w_outlier=0,
                       ):
 
+    # if pos_alpha==100.00:
+    #     pos_alfa = alpha
+    # else:
+    #     pos_alfa = pos_alpha
 
+    if a==100.00: # if fixed threshold
+        a = 1 
 
-    cdef double a = 1
+    # cdef double a = 1
     cdef double sz = 0
     cdef double st = 0
     cdef double sv = 0
@@ -401,7 +407,7 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
     cdef double pos_alfa
 
     cdef double gamma_
-    # cdef double lambda__
+    cdef double lambda__
 
     # cdef np.ndarray[double, ndim=1] qs = np.array([q, q])
     cdef np.ndarray[double, ndim=2] qs_mf = np.ones((comb(nstates,2,exact=True),2))*q # first-stage MF Q-values
