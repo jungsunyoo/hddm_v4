@@ -553,7 +553,7 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
                     elif qval == 1:
                         v_ = dtq_mb * v
                     elif qval==2:
-                        v_ = dtq*mf * v 
+                        v_ = dtq_mf * v 
 
                 if z0 != 100.00: # if use z_reg:
                     if qval == 0:
