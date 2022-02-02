@@ -46,7 +46,7 @@ class HDDMrl(HDDM):
         self.two_stage = kwargs.pop("two_stage", False) # whether to RLDDM just 1st stage or both stages
         self.sep_q = kwargs.pop("sep_q", False) # In 1st stage, whether to use Qmf/Qmb separately    
         # self.sep_reg_qmf = kwargs.pop("sep_reg_qmf", False) # In 1st stage, whether to just model MF-Qval
-        self.qval = kwargs.pop("qval", False) # specify which Qval to use (inputs = "mb", "mf")
+        self.qmb = kwargs.pop("qmb", False) # Given sep_q, True = qmb, False = Qmf
         self.sep_alpha = kwargs.pop("sep_alpha", False) # use different learning rates for second stage
 
         self.a_share = kwargs.pop("a_share", False) # whether to share a btw 1st & 2nd stage (if a!=1)
@@ -397,9 +397,10 @@ class HDDMrl(HDDM):
         wfpt_parents["z2"] = knodes["z2_bottom"] if self.z_reg else 100.00
 
         if self.sep_q:
-            if self.qval == 'mb': # just use MB Qvalues
+            if self.qmb: # == 'mb': # just use MB Qvalues
                 wfpt_parents['qval'] = 1.00
-            elif self.qval == 'mf':
+            # elif self.qval == 'mf':
+            else:
                 wfpt_parents['qval'] = 2.00
 
         else:
