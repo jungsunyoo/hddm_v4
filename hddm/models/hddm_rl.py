@@ -388,29 +388,36 @@ class HDDMrl(HDDM):
         wfpt_parents["gamma"] = knodes["gamma_bottom"]
         wfpt_parents["lambda_"] = knodes["lambda__bottom"] if self.lambda_ else 100.00
 
-        wfpt_parents["v0"] = knodes["v0_bottom"] if self.v_reg else 100.00
-        wfpt_parents["v1"] = knodes["v1_bottom"] if self.v_reg else 100.00
-        wfpt_parents["v2"] = knodes["v2_bottom"] if self.v_reg else 100.00
+        # wfpt_parents["v0"] = knodes["v0_bottom"] if self.v_reg else 100.00
+        # wfpt_parents["v1"] = knodes["v1_bottom"] if self.v_reg else 100.00
+        # wfpt_parents["v2"] = knodes["v2_bottom"] if self.v_reg else 100.00
 
-        wfpt_parents["z0"] = knodes["z0_bottom"] if self.z_reg else 100.00
-        wfpt_parents["z1"] = knodes["z1_bottom"] if self.z_reg else 100.00
-        wfpt_parents["z2"] = knodes["z2_bottom"] if self.z_reg else 100.00
+        # wfpt_parents["z0"] = knodes["z0_bottom"] if self.z_reg else 100.00
+        # wfpt_parents["z1"] = knodes["z1_bottom"] if self.z_reg else 100.00
+        # wfpt_parents["z2"] = knodes["z2_bottom"] if self.z_reg else 100.00
 
 
 
         if self.v_reg: # if using v_regression 
             wfpt_parents['v'] = 100.00
+            wfpt_parents["v0"] = knodes["v0_bottom"]
             if self.sep_q:
                 if self.qmb: # == 'mb': # just use MB Qvalues
-                    wfpt_parents["v2"] = 100.00
                     wfpt_parents['qval'] = 1.00
+                    wfpt_parents["v1"] = knodes["v1_bottom"]
+                    wfpt_parents["v2"] = 100.00
+                    
                 # elif self.qval == 'mf':
                 else:
-                    wfpt_parents["v1"] = 100.00
                     wfpt_parents['qval'] = 2.00
+                    wfpt_parents["v1"] = 100.00
+                    wfpt_parents["v2"] = knodes["v2_bottom"]
+                    
 
             else:
                 wfpt_parents['qval'] = 0.00
+                wfpt_parents["v1"] = knodes["v1_bottom"]
+                wfpt_parents["v2"] = knodes["v2_bottom"]
         
         else: # if not using v_regression: just multiplying v * Q
             if self.sep_q:
@@ -423,7 +430,19 @@ class HDDMrl(HDDM):
             else:
                 wfpt_parents['qval'] = 0.00           
 
-
+        if self.z_reg:
+            wfpt_parents["z0"] = knodes["z0_bottom"]
+            if self.sep_q:
+                if self.qmb:
+                    wfpt_parents["z1"] = knodes["z1_bottom"]
+                    wfpt_parents["z2"] = 100.00
+                else:
+                    wfpt_parents["z1"] = 100.00
+                    wfpt_parents["z2"] = knodes["z2_bottom"]
+            else:
+                # wfpt_parents['qval'] = 0.00
+                wfpt_parents["z1"] = knodes["z1_bottom"]
+                wfpt_parents["z2"] = knodes["z2_bottom"]
 
 
         # if self.z_reg:
