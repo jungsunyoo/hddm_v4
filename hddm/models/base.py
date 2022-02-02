@@ -1099,6 +1099,8 @@ class HDDMBase(AccumulatorModel):
     """HDDM base class. Not intended to be used directly. Instead, use hddm.HDDM."""
 
     def __init__(
+        # JY modified on 2022-02-01 for factorial design
+        # self, data, bias=False, include=(), wiener_params=None, p_outlier=0.05, **kwargs
         self, data, bias=False, include=(), wiener_params=None, p_outlier=0.05, **kwargs
     ):
 
@@ -1121,7 +1123,19 @@ class HDDMBase(AccumulatorModel):
         # For 2-choice models adjust include statement
         if model_config[self.model]["n_choices"] == 2:
             print("Includes supplied: ", include)
-            self.include = set(["v", "a", "t"])
+
+            # JY modified on 2022-02-01 for factorial design
+            # self.include = set(["t"]) # DDM parameter to use regardless of model
+            params = ['t']
+            # self.include = set(["v", "a", "t"])
+            if not self._kwargs['v_reg']:
+                params.append('v')
+            if not self._kwargs['z_reg']:
+                if bias:
+                    params.append('z')
+            if not self._kwargs['a_fix']:
+                params.append('a')
+            self.include = set(params)
             if include is not None:
                 if include == "all":
                     [
@@ -1133,8 +1147,8 @@ class HDDMBase(AccumulatorModel):
                 else:
                     [self.include.add(param) for param in include]
 
-            if bias:
-                self.include.add("z")
+            # if bias:
+            #     self.include.add("z")
 
         else:
             self.include = set()
