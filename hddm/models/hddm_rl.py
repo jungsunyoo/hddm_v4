@@ -48,18 +48,18 @@ class HDDMrl(HDDM):
         super(HDDMrl, self).__init__(*args, **kwargs)
 
     def _create_stochastic_knodes(self, include):
-        params = ["t"]
-        if "p_outlier" in self.include:
-            params.append("p_outlier")
-        # if "z" in self.include:
-        if not self.v_reg:
-            params.append("v")
-        if not self.z_reg:
-            params.append("z")
-        if not self.a_fix:
-            params.append("a")
+        # params = ["t"]
+        # if "p_outlier" in self.include:
+        #     params.append("p_outlier")
+        # # if "z" in self.include:
+        # if not self.v_reg:
+        #     params.append("v")
+        # if not self.z_reg:
+        #     params.append("z")
+        # if not self.a_fix:
+        #     params.append("a")
 
-        include = set(params)
+        # include = set(params)
 
         knodes = super(HDDMrl, self)._create_stochastic_knodes(include)
         if self.non_centered:
