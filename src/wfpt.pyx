@@ -398,9 +398,12 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
     #     pos_alfa = pos_alpha
 
     if a==100.00: # if fixed threshold
-        a = 1 
-    if a_2 == 100.00: # if fixed threshold
-        a_2 = 1
+        a = 1
+
+    # if a_2 == 100.00: # if shared threshold
+    #     a_2 = a
+    # this part is in later if statement in 2nd stage
+
 
     # cdef double a = 1
     cdef double sz = 0

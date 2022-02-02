@@ -463,8 +463,8 @@ class HDDMrl(HDDM):
                 wfpt_parents['v_2'] = 100.00
             if self.a_share:
                 wfpt_parents['a_2'] = 100.00
-            elif not self.a_share and self.a_fix:
-                wfpt_parents['a_2'] = 100.00
+            # elif not self.a_share and self.a_fix:
+            #     wfpt_parents['a_2'] = 100.00
             # if self.z_share:
             #     wfpt_parents['z_2'] = 100.00
             if self.t_share:
