@@ -1165,6 +1165,7 @@ class HDDMBase(AccumulatorModel):
 
 
             self.include = set(params)
+            print(self.include)
             if include is not None:
                 if include == "all":
                     [
@@ -1338,6 +1339,7 @@ class HDDMBase(AccumulatorModel):
             # )
             wfpt_parents["z"] = knodes["z_bottom"] if "z" in self.include else 0.5
             wfpt_parents["z_2"] = knodes["z_2_bottom"] if "z_2" in self.include else 0.5
+            print(wfpt_parents)
         return wfpt_parents
 
     def _create_wfpt_knode(self, knodes):
