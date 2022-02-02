@@ -28,7 +28,7 @@ class HDDMrl(HDDM):
     #     self.wfpt_rl_class = WienerRL
 
     #     super(HDDMrl, self).__init__(*args, **kwargs)
-
+    #
 
     # 2-stage rlddm regression
 
