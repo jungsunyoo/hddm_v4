@@ -39,9 +39,9 @@ class HDDMrl(HDDM):
         self.gamma = kwargs.pop("gamma", True) # added for two-step task
 
         self.lambda_ = kwargs.pop("lambda_", False) # added for two-step task
-        self.v_reg = kwargs.pop("v_reg", False) # added for regression in two-step task
+        self.v_reg = kwargs.pop("v_reg", True) # added for regression in two-step task
         self.z_reg = kwargs.pop("z_reg", False)
-        self.a_fix = kwargs.pop("a_fix", False)
+        self.a_fix = kwargs.pop("a_fix", True)
 
         self.two_stage = kwargs.pop("two_stage", False) # whether to RLDDM just 1st stage or both stages
         self.sep_q = kwargs.pop("sep_q", False) # In 1st stage, whether to use Qmf/Qmb separately    
@@ -152,17 +152,7 @@ class HDDMrl(HDDM):
 
             if self.v_reg:
                 knodes.update(
-                    # self._create_family_normal_non_centered(
-                    #     "v0",
-                    #     value=0,
-                    #     g_tau=50 ** -2, 
-                    #     # std_std=10,
-                    #     # g_mu=0.2,
-                    #     # g_tau=3 ** -2,
-                    #     std_lower=1e-10,
-                    #     std_upper=10,
-                    #     std_value=0.1,
-                    # )
+
                     self._create_family_normal_non_centered(
                         "v0",
                         value=0,
@@ -173,83 +163,81 @@ class HDDMrl(HDDM):
                         std_value=0.1,
                     )                    
                 )
-
-            # if self.v1:
-                knodes.update(
-                    # self._create_family_normal_non_centered(
-                    #     "v1",
-                    #     value=0,
-                    #     g_tau=50 ** -2, 
-                    #     # std_std=10,
-                    #     # g_mu=0.2,
-                    #     # g_tau=3 ** -2,
-                    #     std_lower=1e-10,
-                    #     std_upper=10,
-                    #     std_value=0.1,
-                    # )
-                    self._create_family_normal_non_centered(
-                        "v1",
-                        value=0,
-                        g_mu=0.2,
-                        g_tau=3 ** -2,
-                        std_lower=1e-10,
-                        std_upper=10,
-                        std_value=0.1,
+                if self.sep_q:
+                    if self.qmb: # == 'mb': # just use MB Qvalues
+                        knodes.update(
+                            self._create_family_normal_non_centered(
+                                "v1",
+                                value=0,
+                                g_mu=0.2,
+                                g_tau=3 ** -2,
+                                std_lower=1e-10,
+                                std_upper=10,
+                                std_value=0.1,
+                            )                    
+                        )
+                    else:
+                        knodes.update(
+                            self._create_family_normal_non_centered(
+                                "v2",
+                                value=0,
+                                g_mu=0.2,
+                                g_tau=3 ** -2,
+                                std_lower=1e-10,
+                                std_upper=10,
+                                std_value=0.1,
+                            )                   
+                        )
+                else:
+                    knodes.update(
+                        self._create_family_normal_non_centered(
+                            "v1",
+                            value=0,
+                            g_mu=0.2,
+                            g_tau=3 ** -2,
+                            std_lower=1e-10,
+                            std_upper=10,
+                            std_value=0.1,
+                        )                    
+                    )
+                    knodes.update(
+                        self._create_family_normal_non_centered(
+                            "v2",
+                            value=0,
+                            g_mu=0.2,
+                            g_tau=3 ** -2,
+                            std_lower=1e-10,
+                            std_upper=10,
+                            std_value=0.1,
+                        )                   
                     )                    
-                )
-            # if self.v2:
-                knodes.update(
-                    # self._create_family_normal_non_centered(
-                    #     "v2",
-                    #     value=0,
-                    #     g_tau=50 ** -2, 
-                    #     # std_std=10,
-                    #     # g_mu=0.2,
-                    #     # g_tau=3 ** -2,
-                    #     std_lower=1e-10,
-                    #     std_upper=10,
-                    #     std_value=0.1,
-                    # )
-                    self._create_family_normal_non_centered(
-                        "v2",
-                        value=0,
-                        g_mu=0.2,
-                        g_tau=3 ** -2,
-                        std_lower=1e-10,
-                        std_upper=10,
-                        std_value=0.1,
-                    )                   
-                )
 
             if self.z_reg:
                 knodes.update(
-                    # self._create_family_normal_non_centered(
-                    #     "v0",
-                    #     value=0,
-                    #     g_tau=50 ** -2, 
-                    #     # std_std=10,
-                    #     # g_mu=0.2,
-                    #     # g_tau=3 ** -2,
-                    #     std_lower=1e-10,
-                    #     std_upper=10,
-                    #     std_value=0.1,
-                    # )
                 self._create_family_invlogit(
                     "z0", value=0.5, g_tau=0.5 ** -2, std_std=0.05)                    
 
                 )
-
-            # if self.z1:
-                knodes.update(
-                self._create_family_invlogit(
-                    "z1", value=0.5, g_tau=0.5 ** -2, std_std=0.05)  
-            )
-            # if self.z2:
-                knodes.update(
-                self._create_family_invlogit(
-                    "z2", value=0.5, g_tau=0.5 ** -2, std_std=0.05)  
-            )
-
+                if self.sep_q:
+                    if self.qmb: # == 'mb': # just use MB Qvalues                
+                        knodes.update(
+                        self._create_family_invlogit(
+                            "z1", value=0.5, g_tau=0.5 ** -2, std_std=0.05)  
+                        )
+                    else:
+                        knodes.update(
+                        self._create_family_invlogit(
+                            "z2", value=0.5, g_tau=0.5 ** -2, std_std=0.05)  
+                        )
+                else:
+                    knodes.update(
+                    self._create_family_invlogit(
+                        "z1", value=0.5, g_tau=0.5 ** -2, std_std=0.05)  
+                    )                    
+                    knodes.update(
+                    self._create_family_invlogit(
+                        "z2", value=0.5, g_tau=0.5 ** -2, std_std=0.05)  
+                    )
 
         else:
             if self.alpha:
