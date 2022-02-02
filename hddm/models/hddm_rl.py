@@ -355,6 +355,12 @@ class HDDMrl(HDDM):
         wfpt_parents["alpha"] = knodes["alpha_bottom"]
         wfpt_parents["pos_alpha"] = knodes["pos_alpha_bottom"] if self.dual else 100.00
 
+        # if self.two_stage:
+        #     wfpt_parents["alpha_2"] = knodes["alpha_2_bottom"]
+        # else:
+        wfpt_parents["alpha_2"] = knodes["alpha_2_bottom"] if self.two_stage else 100.00
+
+
 
         if (not self.v_reg) and (not self.sep_q):    
             wfpt_parents["w"] = knodes["w_bottom"]
@@ -377,6 +383,7 @@ class HDDMrl(HDDM):
                 wfpt_parents['qval'] = 1.00
             elif self.qval == 'mf':
                 wfpt_parents['qval'] = 2.00
+
         else:
             wfpt_parents['qval'] = 0.00
 
