@@ -1188,6 +1188,15 @@ class HDDMBase(AccumulatorModel):
                 "sv",
                 "p_outlier",
                 "alpha",
+
+                "v_2",
+                "a_2",
+                "t_2",
+                "z_2",
+                "alpha2",
+
+
+
             )
 
         # possible_parameters = ("v", "a", "t", "z", "st", "sz", "sv", "p_outlier", "dual_alpha",
