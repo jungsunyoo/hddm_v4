@@ -1135,6 +1135,15 @@ class HDDMBase(AccumulatorModel):
             if not self.z_reg:
                 if bias:
                     params.append('z')
+            # if bias:
+            #     params.append('z_2')
+
+
+
+
+
+
+
             # if not self._kwargs['a_fix']:
             if not self.a_fix:
                 params.append('a')
@@ -1148,8 +1157,10 @@ class HDDMBase(AccumulatorModel):
                 if not self.t_share:
                     params.append('t_2')
                 if not self.z_share:
-                    if bias:
+                    if bias: 
                         params.append('z_2')
+
+                            
 
 
 

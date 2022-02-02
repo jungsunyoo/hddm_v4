@@ -439,8 +439,8 @@ class HDDMrl(HDDM):
                 wfpt_parents['a_2'] = 100.00
             elif not self.a_share and self.a_fix:
                 wfpt_parents['a_2'] = 100.00
-            if self.z_share:
-                wfpt_parents['z_2'] = 100.00
+            # if self.z_share:
+            #     wfpt_parents['z_2'] = 100.00
             if self.t_share:
                 wfpt_parents['t_2'] = 100.00
         else:
@@ -448,7 +448,7 @@ class HDDMrl(HDDM):
             # since only first-stage is modeled, none of v_2,a_2,t_2,z_2 is used
             wfpt_parents['v_2'] = 100.00
             wfpt_parents['a_2'] = 100.00
-            wfpt_parents['z_2'] = 100.00
+            # wfpt_parents['z_2'] = 100.00
             wfpt_parents['t_2'] = 100.00
 
 

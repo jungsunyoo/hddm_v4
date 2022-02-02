@@ -598,7 +598,7 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
 
                     v_2_ = v if v_2==100.00 else v_2
                     a_2_ = a if a_2 == 100.00 else a_2 
-                    z_2_ = z if z_2 == 100.00 else z_2 
+                    z_2_ = z if z_2 == 0.5 else z_2 
                     t_2_ = t if t_2 == 100.00 else t_2                                        
 
                     qs = qs_mb[s2s[i],:]
