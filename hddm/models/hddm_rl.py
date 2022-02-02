@@ -335,40 +335,68 @@ class HDDMrl(HDDM):
                     "v0", value=0, g_tau=50 ** -2, std_std=10 # uninformative prior
                 )
             )
-
-            # if self.v1:
-                knodes.update(
-                self._create_family_normal_normal_hnormal(
-                    "v1", value=0, g_tau=50 ** -2, std_std=10 # uninformative prior
+                if self.sep_q:
+                    if self.qmb: # == 'mb': # just use MB Qvalues
+                        knodes.update(
+                        self._create_family_normal_normal_hnormal(
+                            "v1", value=0, g_tau=50 ** -2, std_std=10 # uninformative prior
+                            )
+                        )
+                    else: 
+                        knodes.update(
+                        self._create_family_normal_normal_hnormal(
+                            "v2", value=0, g_tau=50 ** -2, std_std=10 # uninformative prior
+                    )
+                else: 
+                    knodes.update(
+                    self._create_family_normal_normal_hnormal(
+                        "v1", value=0, g_tau=50 ** -2, std_std=10 # uninformative prior
+                        )
+                    )
+                    knodes.update(
+                    self._create_family_normal_normal_hnormal(
+                        "v2", value=0, g_tau=50 ** -2, std_std=10 # uninformative prior
+                    )                
                 )
-            )
-            # if self.v2:
-                knodes.update(
-                self._create_family_normal_normal_hnormal(
-                    "v2", value=0, g_tau=50 ** -2, std_std=10 # uninformative prior
-                )
-            )
             # )
 
             if self.z_reg:
                 knodes.update(
                 self._create_family_normal_normal_hnormal(
                     "z0", value=0, g_tau=50 ** -2, std_std=10 # uninformative prior
+                    )
                 )
-            )
+                if self.sep_q:
+                    if self.qmb:
+                        knodes.update(
+                        self._create_family_normal_normal_hnormal(
+                            "z1", value=0, g_tau=50 ** -2, std_std=10 # uninformative prior
+                            )
+                        )
+                    else:
+                        knodes.update(
+                        self._create_family_normal_normal_hnormal(
+                            "z2", value=0, g_tau=50 ** -2, std_std=10 # uninformative prior
+                            )
+                        )
+                else:
+                        knodes.update(
+                        self._create_family_normal_normal_hnormal(
+                            "z1", value=0, g_tau=50 ** -2, std_std=10 # uninformative prior
+                            )
+                        )
+
+                        knodes.update(
+                        self._create_family_normal_normal_hnormal(
+                            "z2", value=0, g_tau=50 ** -2, std_std=10 # uninformative prior
+                        )
+                    )
+
 
             # if self.z1:
-                knodes.update(
-                self._create_family_normal_normal_hnormal(
-                    "z1", value=0, g_tau=50 ** -2, std_std=10 # uninformative prior
-                )
-            )
+
             # if self.z2:
-                knodes.update(
-                self._create_family_normal_normal_hnormal(
-                    "z2", value=0, g_tau=50 ** -2, std_std=10 # uninformative prior
-                )
-            )
+
 
         return knodes
 
