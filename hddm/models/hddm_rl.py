@@ -396,17 +396,9 @@ class HDDMrl(HDDM):
         wfpt_parents["z1"] = knodes["z1_bottom"] if self.z_reg else 100.00
         wfpt_parents["z2"] = knodes["z2_bottom"] if self.z_reg else 100.00
 
-        if self.sep_q:
-            if self.qmb: # == 'mb': # just use MB Qvalues
-                wfpt_parents['qval'] = 1.00
-            # elif self.qval == 'mf':
-            else:
-                wfpt_parents['qval'] = 2.00
 
-        else:
-            wfpt_parents['qval'] = 0.00
 
-        if self.v_reg:
+        if self.v_reg: # if using v_regression 
             wfpt_parents['v'] = 100.00
             if self.sep_q:
                 if self.qmb: # == 'mb': # just use MB Qvalues
@@ -419,6 +411,18 @@ class HDDMrl(HDDM):
 
             else:
                 wfpt_parents['qval'] = 0.00
+        
+        else: # if not using v_regression: just multiplying v * Q
+            if self.sep_q:
+                if self.qmb: # == 'mb': # just use MB Qvalues
+                    wfpt_parents['qval'] = 1.00
+                # elif self.qval == 'mf':
+                else:
+                    wfpt_parents['qval'] = 2.00
+
+            else:
+                wfpt_parents['qval'] = 0.00           
+
 
 
 
@@ -432,6 +436,8 @@ class HDDMrl(HDDM):
             if self.v_share:
                 wfpt_parents['v_2'] = 100.00
             if self.a_share:
+                wfpt_parents['a_2'] = 100.00
+            elif not self.a_share and self.a_fix:
                 wfpt_parents['a_2'] = 100.00
             if self.z_share:
                 wfpt_parents['z_2'] = 100.00
