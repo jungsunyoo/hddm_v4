@@ -44,10 +44,17 @@ class HDDMrl(HDDM):
         self.a_fix = kwargs.pop("a_fix", True)
 
         self.two_stage = kwargs.pop("two_stage", False) # whether to RLDDM just 1st stage or both stages
-        self.sep_q = kwargs.pop("sep_q", False) # In 1st stage, whether to use Qmf/Qmb separately    
-        # self.sep_reg_qmf = kwargs.pop("sep_reg_qmf", False) # In 1st stage, whether to just model MF-Qval
-        self.qmb = kwargs.pop("qmb", False) # Given sep_q, True = qmb, False = Qmf
         self.sep_alpha = kwargs.pop("sep_alpha", False) # use different learning rates for second stage
+
+        self.v_sep_q = kwargs.pop("v_sep_q", False) # In 1st stage, whether to use Qmf/Qmb separately for v (drift rate) regression   
+        self.v_qmb = kwargs.pop("v_qmb", False) # Given sep_q, True = qmb, False = Qmf
+        self.v_interaction = kwargs.pop("v_interaction", False) # whether to include interaction term for v
+        
+
+        self.z_sep_q = kwargs.pop("z_sep_q", False) # In 1st stage, whether to use Qmf/Qmb separately for z (starting point) regression    
+        self.z_qmb = kwargs.pop("z_qmb", False) # Given sep_q, True = qmb, False = Qmf
+        self.z_interaction = kwargs.pop("z_interaction", False) # whether to include interaction term for z
+
 
         self.a_share = kwargs.pop("a_share", False) # whether to share a btw 1st & 2nd stage (if a!=1)
         self.v_share = kwargs.pop("v_share", False) # whether to share v btw 1st & 2nd stage (if v!=reg)
@@ -163,8 +170,8 @@ class HDDMrl(HDDM):
                         std_value=0.1,
                     )                    
                 )
-                if self.sep_q:
-                    if self.qmb: # == 'mb': # just use MB Qvalues
+                if self.v_sep_q:
+                    if self.v_qmb: # == 'mb': # just use MB Qvalues
                         knodes.update(
                             self._create_family_normal_non_centered(
                                 "v1",
@@ -188,7 +195,21 @@ class HDDMrl(HDDM):
                                 std_value=0.1,
                             )                   
                         )
-                else:
+                else: # if both 
+                    if self.v_interaction: # if include interaction term for v1 and v2
+                        knodes.update(
+                            self._create_family_normal_non_centered(
+                                "v_interaction",
+                                value=0,
+                                g_mu=0.2,
+                                g_tau=3 ** -2,
+                                std_lower=1e-10,
+                                std_upper=10,
+                                std_value=0.1,
+                        )
+                    )     
+
+
                     knodes.update(
                         self._create_family_normal_non_centered(
                             "v1",
@@ -218,8 +239,8 @@ class HDDMrl(HDDM):
                     "z0", value=0.5, g_tau=0.5 ** -2, std_std=0.05)                    
 
                 )
-                if self.sep_q:
-                    if self.qmb: # == 'mb': # just use MB Qvalues                
+                if self.z_sep_q:
+                    if self.z_qmb: # == 'mb': # just use MB Qvalues                
                         knodes.update(
                         self._create_family_invlogit(
                             "z1", value=0.5, g_tau=0.5 ** -2, std_std=0.05)  
@@ -229,7 +250,14 @@ class HDDMrl(HDDM):
                         self._create_family_invlogit(
                             "z2", value=0.5, g_tau=0.5 ** -2, std_std=0.05)  
                         )
-                else:
+                else: # if both
+                    if self.z_interaction:
+                        knodes.update(
+                        self._create_family_invlogit(
+                            "z_interaction", value=0.5, g_tau=0.5 ** -2, std_std=0.05)  
+
+
+                        ) 
                     knodes.update(
                     self._create_family_invlogit(
                         "z1", value=0.5, g_tau=0.5 ** -2, std_std=0.05)  
@@ -323,8 +351,8 @@ class HDDMrl(HDDM):
                     "v0", value=0, g_tau=50 ** -2, std_std=10 # uninformative prior
                 )
             )
-                if self.sep_q:
-                    if self.qmb: # == 'mb': # just use MB Qvalues
+                if self.v_sep_q:
+                    if self.v_qmb: # == 'mb': # just use MB Qvalues
                         knodes.update(
                         self._create_family_normal_normal_hnormal(
                             "v1", value=0, g_tau=50 ** -2, std_std=10 # uninformative prior
@@ -336,7 +364,16 @@ class HDDMrl(HDDM):
                             "v2", value=0, g_tau=50 ** -2, std_std=10 # uninformative prior
                             )
                         )
-                else: 
+                else: # if both
+
+                    if self.v_interaction:
+                        knodes.update(
+                            self._create_family_normal_normal_hnormal(
+                                "v_interaction", value=0, g_tau=50 ** -2, std_std=10 # uninformative prior
+                                )
+                            ) 
+
+
                     knodes.update(
                     self._create_family_normal_normal_hnormal(
                         "v1", value=0, g_tau=50 ** -2, std_std=10 # uninformative prior
@@ -355,8 +392,8 @@ class HDDMrl(HDDM):
                     "z0", value=0, g_tau=50 ** -2, std_std=10 # uninformative prior
                     )
                 )
-                if self.sep_q:
-                    if self.qmb:
+                if self.z_sep_q:
+                    if self.z_qmb:
                         knodes.update(
                         self._create_family_normal_normal_hnormal(
                             "z1", value=0, g_tau=50 ** -2, std_std=10 # uninformative prior
@@ -368,17 +405,24 @@ class HDDMrl(HDDM):
                             "z2", value=0, g_tau=50 ** -2, std_std=10 # uninformative prior
                             )
                         )
-                else:
+                else: # if both
+                    if self.z_interaction: 
                         knodes.update(
                         self._create_family_normal_normal_hnormal(
-                            "z1", value=0, g_tau=50 ** -2, std_std=10 # uninformative prior
+                            "z_interaction", value=0, g_tau=50 ** -2, std_std=10 # uninformative prior
                             )
                         )
 
-                        knodes.update(
-                        self._create_family_normal_normal_hnormal(
-                            "z2", value=0, g_tau=50 ** -2, std_std=10 # uninformative prior
+                    knodes.update(
+                    self._create_family_normal_normal_hnormal(
+                        "z1", value=0, g_tau=50 ** -2, std_std=10 # uninformative prior
                         )
+                    )
+
+                    knodes.update(
+                    self._create_family_normal_normal_hnormal(
+                        "z2", value=0, g_tau=50 ** -2, std_std=10 # uninformative prior
+                    )
                     )
 
 
@@ -418,21 +462,27 @@ class HDDMrl(HDDM):
         if self.v_reg: # if using v_regression 
             wfpt_parents['v'] = 100.00
             wfpt_parents["v0"] = knodes["v0_bottom"]
-            if self.sep_q:
-                if self.qmb: # == 'mb': # just use MB Qvalues
-                    wfpt_parents['qval'] = 1.00
+            if self.v_sep_q:
+                if self.v_qmb: # == 'mb': # just use MB Qvalues
+                    wfpt_parents['v_qval'] = 1.00
                     wfpt_parents["v1"] = knodes["v1_bottom"]
                     wfpt_parents["v2"] = 100.00
                     
                 # elif self.qval == 'mf':
                 else:
-                    wfpt_parents['qval'] = 2.00
+                    wfpt_parents['v_qval'] = 2.00
                     wfpt_parents["v1"] = 100.00
                     wfpt_parents["v2"] = knodes["v2_bottom"]
                     
 
             else:
-                wfpt_parents['qval'] = 0.00
+
+                if self.v_interaction:
+                    wfpt_parents['v_interaction'] = knodes['v_interaction_bottom']
+                else:
+                    wfpt_parents['v_interaction'] = 100.00
+
+                wfpt_parents['v_qval'] = 0.00
                 wfpt_parents["v1"] = knodes["v1_bottom"]
                 wfpt_parents["v2"] = knodes["v2_bottom"]
         
@@ -440,34 +490,51 @@ class HDDMrl(HDDM):
             wfpt_parents["v0"] = 100.00    
             wfpt_parents["v1"] = 100.00
             wfpt_parents["v2"] = 100.00
+            wfpt_parents["v_interaction"] = 100.00
 
-            if self.sep_q:
-                if self.qmb: # == 'mb': # just use MB Qvalues
-                    wfpt_parents['qval'] = 1.00
+            if self.v_sep_q:
+                if self.v_qmb: # == 'mb': # just use MB Qvalues
+                    wfpt_parents['v_qval'] = 1.00
                 # elif self.qval == 'mf':
                 else:
-                    wfpt_parents['qval'] = 2.00
+                    wfpt_parents['v_qval'] = 2.00
 
             else:
-                wfpt_parents['qval'] = 0.00           
+                wfpt_parents['v_qval'] = 0.00           
 
         if self.z_reg:
             wfpt_parents["z0"] = knodes["z0_bottom"]
-            if self.sep_q:
-                if self.qmb:
+            if self.z_sep_q:
+                if self.z_qmb:
+                    wfpt_parents['z_qval'] = 1.00
                     wfpt_parents["z1"] = knodes["z1_bottom"]
                     wfpt_parents["z2"] = 100.00
                 else:
+                    wfpt_parents['z_qval'] = 2.00
                     wfpt_parents["z1"] = 100.00
                     wfpt_parents["z2"] = knodes["z2_bottom"]
             else:
-                # wfpt_parents['qval'] = 0.00
+                if self.z_interaction: 
+                    wfpt_parents['z_interaction'] = knodes['z_interaction_bottom']
+                else:
+                    wfpt_parents['z_interaction'] = 100.00
+                wfpt_parents['z_qval'] = 0.00
                 wfpt_parents["z1"] = knodes["z1_bottom"]
                 wfpt_parents["z2"] = knodes["z2_bottom"]
         else: # if not using z_regression
             wfpt_parents["z0"] = 100.00    
             wfpt_parents["z1"] = 100.00
             wfpt_parents["z2"] = 100.00
+            wfpt_paterns['z_interaction'] = 100.00
+            if self.z_sep_q:
+                if self.z_qmb: # == 'mb': # just use MB Qvalues
+                    wfpt_parents['z_qval'] = 1.00
+                # elif self.qval == 'mf':
+                else:
+                    wfpt_parents['z_qval'] = 2.00
+
+            else:
+                wfpt_parents['z_qval'] = 0.00              
 
         # if self.z_reg:
         #     wfpt_parents['z'] = 100.00
@@ -673,7 +740,8 @@ def wienerRL_like_2step_reg(x, v0, v1, v2, z0, z1, z2,lambda_, alpha, pos_alpha,
         # sz,
         t,
         nstates,
-        qval,
+        v_qval,
+        z_qval,
         two_stage,
 
         a_2,
