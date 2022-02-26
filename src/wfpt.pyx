@@ -377,6 +377,7 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
                       double t,
                       int nstates,
                       double v_qval, double z_qval,
+                      double v_interaction, double z_interaction,
                       double two_stage,
 
                       double a_2,
@@ -545,7 +546,11 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
                 dtq_mf = qs_mf[s1s[i],0] - qs_mf[s1s[i],1]
                 if v == 100.00: # if v_reg
                     if v_qval == 0:
-                        v_ = v0 + (dtq_mb * v1) + (dtq_mf * v2) # use both Qvals
+
+                        if v_interaction == 100.00: # if don't use interaction term
+                            v_ = v0 + (dtq_mb * v1) + (dtq_mf * v2) # use both Qvals
+                        else: # if use interaction term 
+                            v_ = v0 + (dtq_mb * v1) + (dtq_mf * v2) + (v_interaction * dtq_mb + dtq_mf)
                     elif v_qval == 1: # just mb
                         v_ = v0 + (dtq_mb * v1)
                     elif v_qval == 2: 
@@ -562,7 +567,10 @@ def wiener_like_rlddm_2step_reg(np.ndarray[double, ndim=1] x1, # 1st-stage RT
 
                 if z0 != 100.00: # if use z_reg:
                     if z_qval == 0:
-                        z_ = z0 + (dtq_mb * z1) + (dtq_mf * z2) # use both Qvals
+                        if z_interaction == 100.00: # if don't use interaction term 
+                            z_ = z0 + (dtq_mb * z1) + (dtq_mf * z2) # use both Qvals
+                        else: 
+                            z_ = z0 + (dtq_mb * z1) + (dtq_mf * z2) + (z_interaction * dtq_mb * dtq_mf)
                     elif z_qval == 1: # just mb
                         z_ = z0 + (dtq_mb * z1)
                     elif z_qval == 2: 
